@@ -1,5 +1,7 @@
 package lab02;
 
+import java.util.Scanner;
+
 public class Cliente {
     //Difinição dos atributos da classe Cliente
     private String nome;
@@ -95,7 +97,7 @@ public class Cliente {
         DV = Integer.toString(digVer1) + Integer.toString(digVer2);  
         return DV;
     }
-    public String toString(Cliente cliente){
+    public String toString(Cliente cliente) {
         String saída;
         saída = "As informações do cliente são:\n"
                 + "ID: " + cliente.getNome() + ";\n"
@@ -104,5 +106,27 @@ public class Cliente {
                 + "Idade: " + cliente.getIdade() + ";\n"
                 + "Endereço: " + cliente.getEndereco() + ";\n";
         return saída;
+    }
+    public void lerCliente(Cliente cliente) {
+        Scanner input = new Scanner(System.in);
+        System.out.print("Lendo Cliente: \nNome: ");
+        setNome(input.nextLine());
+        
+        boolean Inválido = false;
+        do {
+            if (Inválido == true)
+                System.out.println("CPF inválido. Insira novamente: ");
+            System.out.print("CPF: ");
+            setCpf(input.nextLine());
+            Inválido = true;
+        }while(cliente.validarCPF(cliente.getCpf()) == false);
+
+        System.out.print("Data de nascimento: ");
+        setDataNascimento(input.nextLine());
+        System.out.print("Idade: ");
+        setIdade(Integer.parseInt(input.nextLine()));
+        System.out.print("Endereço: ");
+        setEndereco(input.nextLine());
+
     }
 }

@@ -1,5 +1,7 @@
 package lab02;
 
+import java.util.Scanner;
+
 public class Seguradora {
     //Declaração dos atríbutos da classe Seguradora
     private String nome;
@@ -40,7 +42,7 @@ public class Seguradora {
     public void setEndereco(String endereco) {
         this.endereco = endereco;
     }    
-    public String toString(Seguradora seguradora){
+    public String toString(Seguradora seguradora) {
         String saída;
         saída = "As informações da seguradora são:\n" 
                 + "Nome: " + seguradora.getNome() + ";\n" 
@@ -48,5 +50,17 @@ public class Seguradora {
                 + "Email: " + seguradora.getEmail() + ";\n"
                 + "Endereço: " + seguradora.getEndereco() + ";\n";
         return saída;
+    }
+    public void lerSeguradora(Seguradora seguradora) {
+        Scanner input = new Scanner(System.in);
+        System.out.print("Lendo Seguradora: \nNome: ");
+        setNome(input.nextLine());
+        System.out.print("Telefone: ");
+        setTelefone(input.nextLine());
+        System.out.print("Email: ");
+        setEmail(input.nextLine());
+        System.out.print("Endereço: ");
+        setEndereco(input.nextLine());
+
     }
 }

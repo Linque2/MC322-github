@@ -1,5 +1,7 @@
 package lab02;
 
+import java.util.Scanner;
+
 public class Veículo {
     //Declaração dos atríbutos da classe Veículo
     private String placa;
@@ -39,5 +41,15 @@ public class Veículo {
                 + "Marca: " + veículo.getMarca() + ";\n" 
                 + "Modelo: " + veículo.getModelo() + ";\n";
         return saída;
+    }
+    public void lerVeículo(Veículo veículo) {
+        Scanner input = new Scanner(System.in);
+        System.out.print("Lendo Veículo: \nPlaca: ");
+        setPlaca(input.nextLine());
+        System.out.print("Marca: ");
+        setMarca(input.nextLine());
+        System.out.print("Modelo: ");
+        setModelo(input.nextLine());
+
     }
 }

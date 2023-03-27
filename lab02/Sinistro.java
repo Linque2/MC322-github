@@ -1,6 +1,7 @@
 package lab02;
 
 import java.util.Random;
+import java.util.Scanner;
 
 public class Sinistro {
     //Declaração dos atríbutos da classe Sinistro
@@ -48,6 +49,14 @@ public class Sinistro {
                 + "Endereço: " + sinistro.getEndereco() + ";\n";
         return saída;
     }
+    public void lerSinistro(Sinistro sinistro) {
+        Scanner input = new Scanner(System.in);
+        setId(criaIdProcedutal());
+        System.out.print("Lendo Sinistro: \nData: ");
+        setData(input.nextLine());
+        System.out.print("Endereço: ");
+        setEndereco(input.nextLine());
+
+    }
 }
 
-/*toString() é um método que deve ser aplicado para todas as classes e tem a afunção de imprimir uma mensagem com os dados pertencentes a um objeto da classe */
