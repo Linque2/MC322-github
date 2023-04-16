@@ -5,9 +5,9 @@ import java.util.Scanner;
 public class Cliente {
     //Difinição dos atributos da classe Cliente
     private String nome;
-    /* private String cpf; */
-    /* private String dataNascimento; */
-    /* private int idade; */
+    private String cpf;
+    private String dataNascimento; 
+    private int idade; 
     private String endereco;
 
     //Construtor
