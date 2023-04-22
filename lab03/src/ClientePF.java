@@ -1,5 +1,8 @@
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
+
+import javax.swing.text.DateFormatter;
 
 public class ClientePF extends Cliente {
     //Declarando os atributos da classe
@@ -11,8 +14,8 @@ public class ClientePF extends Cliente {
     private String classeEconomica;
 
     //Construtor
-    public ClientePF(String nome, String endereco,LinkedList listaVeiculos , LocalDate dataLicenca, String educacao, String genero, String classeEconomica, String CPF, LocalDate dataNascimento) {
-        super(nome, endereco, listaVeiculos);
+    public ClientePF(String nome, String endereco,LinkedList<Veículo> listaVeiculos , LocalDate dataLicenca, String educacao, String genero, String classeEconomica, String CPF, LocalDate dataNascimento) {
+        super(nome, endereco, listaVeiculos); //**
         this.CPF = CPF;
         this.genero = genero;
         this.dataLicenca = dataLicenca;
@@ -88,6 +91,7 @@ public class ClientePF extends Cliente {
 
         return true;
     }
+
     public boolean sequenciaDeAlgarismosIguais(String cpf) {
         boolean mesmo_algarismo = true;
         for (int i = 0; i < 10; i++){
@@ -96,6 +100,7 @@ public class ClientePF extends Cliente {
         }
         return mesmo_algarismo;
     }
+
     public String calcularDigitosVerificadoresDoCPF(String cpf) {
         int digVer1 = 0, digVer2 = 0;
         String DV;
@@ -118,5 +123,39 @@ public class ClientePF extends Cliente {
 
         DV = Integer.toString(digVer1) + Integer.toString(digVer2);  
         return DV;
+    }
+
+    public void lerClientePF(ClientePF cliente) {
+        Scanner input = new Scanner(System.in);
+        System.out.print("Lendo ClientePF: \nNome: ");
+        setNome(input.nextLine());
+        
+        boolean Inválido = false;
+        do {
+            if (Inválido == true)
+                System.out.println("CPF inválido. Insira novamente: ");
+            System.out.print("CPF: ");
+            setCPF(input.nextLine());
+            Inválido = true;
+        }while(cliente.validarCPF(cliente.getCPF()) == false);
+
+        System.out.print("Data licença: [dd/MM/yyyy]");
+        String data_licença = input.nextLine();
+        DateTimeFormatter formatador_de_data = DateTimeFormatter.ofPattern("dd/MM/yyy", new Locale("pt", "BR"));
+        cliente.dataNascimento = LocalDate.parse(data_licença, formatador_de_data);
+
+        System.out.print("Nível de educação: ");
+        setEducacao(input.nextLine());
+
+        System.out.print("Data de nascimento: [dd/MM/yyyy]");
+        String data_de_nascimento = input.nextLine();
+        cliente.dataNascimento = LocalDate.parse(data_de_nascimento, formatador_de_data);
+
+        System.out.print("Endereço: ");
+        setEndereco(input.nextLine());
+
+        System.out.print("Classe econômica: ");
+        setClasseEconomica(input.nextLine());
+        //input.close();
     }
 }

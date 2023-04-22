@@ -1,17 +1,16 @@
-
 import java.util.*;
 
 public class Cliente {
     //Difinição dos atributos da classe Cliente
     private String nome;
     private String endereco;
-    private LinkedList listaVeiculos;
+    private LinkedList<Veículo> listaVeiculos;
 
     //Construtor
-    public Cliente(String nome, String endereco, LinkedList listaVeiculos) {
+    public Cliente(String nome, String endereco, LinkedList<Veículo> listaVeiculos) {
         this.nome = nome;
         this.endereco = endereco;
-        this.listaVeiculos = new LinkedList();
+        this.listaVeiculos = new LinkedList<Veículo>();
     }
 
     /*Definição dos métodos da classe Cliente*/
@@ -32,12 +31,12 @@ public class Cliente {
         this.endereco = endereco;
     }
 
-    public LinkedList getListaVeiculos() {
+    public LinkedList<Veículo> getListaVeiculos() {
         return this.listaVeiculos;
     }
 
-    public void setListaVeiculos(LinkedList listaVeiculos) {
-        this.listaVeiculos = listaVeiculos;
+    public void setListaVeiculos(Veículo veiculo) {
+        this.listaVeiculos.add(veiculo);
     }
 
     /*public String toString(Cliente cliente) {
