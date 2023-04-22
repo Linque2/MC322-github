@@ -51,7 +51,7 @@ public class ClientePJ extends Cliente {
         return true;
     }
 
-    public boolean sequenciaDeAlgarismosIguais(String cnpj) {  //!Mudar tudo para CNPJ
+    public boolean sequenciaDeAlgarismosIguais(String cnpj) {
         boolean mesmo_algarismo = true;
         for (int i = 0; i < 12; i++){
             if (cnpj.charAt(i) != cnpj.charAt(i + 1))
@@ -110,7 +110,5 @@ public class ClientePJ extends Cliente {
 
         System.out.print("Endereço: ");
         setEndereco(input.nextLine());
-
-        //input.close();
     }
 }

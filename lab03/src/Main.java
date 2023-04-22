@@ -66,19 +66,6 @@ public class Main {
                 break;
         }
         }
-        /*
-         * ContaBancaria cc;  =>  declaração de "ponteiro"
-         * if(__) {
-         *  cc = new ContaBancaria("B")
-         * } else {
-         *  cc = new ContaEspecial("B1", 1000)
-         * }
-         * cc.depositar(100);
-         * cc.sacar(100);
-         * 
-         * O ponteiro cc funciona para os dois objetos, pois referencial uma classe hierarquicamente superior por um nível // //
-         * Na chamada de métodos, o copilador decidade de classe chamar o método, apenas durante o tempo de execução, e será coerente com o tipo da classe em que o objeto foi declarado
-         */
         input.close();
     }
 }

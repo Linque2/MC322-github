@@ -156,6 +156,5 @@ public class ClientePF extends Cliente {
 
         System.out.print("Classe econômica: ");
         setClasseEconomica(input.nextLine());
-        //input.close();
     }
 }

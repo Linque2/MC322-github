@@ -89,9 +89,7 @@ public class Seguradora {
         sinistro.setData(input.nextLine());
         System.out.print("Endereço: ");
         sinistro.setEndereco(input.nextLine());
-        sinistro.setSeguradora(this); //?
-        /*para adicionar a "seguradora," cliente e veículo é necessário listas já formadas
-        */
+        sinistro.setSeguradora(this); 
 
         String nome_cliente;
         System.out.print("Nome do cliente: ");
@@ -101,8 +99,8 @@ public class Seguradora {
                 sinistro.setCliente(listaClientes.get(i));
             else if (i == listaClientes.size()-1 && !listaClientes.get(i).getNome().equals(nome_cliente)){ 
                 return false;
-            } //TODO printar "o cliente ainda não foi cadastrado" //
         }
+    }
         String placa;
         System.out.print("Placa do Veículo: ");
         placa = input.nextLine();
@@ -118,7 +116,6 @@ public class Seguradora {
     }
 
     public boolean visualizarSinistro(String cliente) {
-        Scanner input = new Scanner(System.in);
         for (int i = 0; i < listaSinistros.size(); i++) {
             if (listaSinistros.get(i).getCliente().getNome().equals(cliente))
                 System.out.println("Sinistro " + listaSinistros.get(i).getId());
@@ -153,6 +150,5 @@ public class Seguradora {
         setEmail(input.nextLine());
         System.out.print("Endereço: ");
         setEndereco(input.nextLine());
-        //input.close(); //!testar se funciona
     }
 }
