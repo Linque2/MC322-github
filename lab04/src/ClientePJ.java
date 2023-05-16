@@ -76,4 +76,3 @@ public class ClientePJ extends Cliente {
     }
 }
 
-// TODO: calculaScore()

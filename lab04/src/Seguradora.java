@@ -70,9 +70,13 @@ public class Seguradora {
 
     //Demais métodos
 
-    public boolean cadastrarCliente(Cliente cliente) {
+    public boolean cadastrarCliente(ClientePF cliente) {
         setListaClientes(cliente);
-        //?cliente.setPreco_do_seguro(calcularPrecoSeguroCliente(cliente));
+        return true;
+    }
+
+    public boolean cadastrarCliente(ClientePJ cliente) {
+        setListaClientes(cliente);
         return true;
     }
 
@@ -97,7 +101,14 @@ public class Seguradora {
                 return cliente;
         }
         return null;
+    }
 
+    public int buscaClienteindex(String nome) {
+        for (int i = 0; i < getListaClientes().size(); i++) {
+            if (getListaClientes().get(i).getNome().equals(nome))
+                return i;
+        }
+        return -1;
     }
 
     public boolean gerarSinistro() {
@@ -129,6 +140,13 @@ public class Seguradora {
             }
         }
         setListaSinistros(sinistro);
+
+        if (cliente.getTipo().equals("PF")){ //Recalcula o seguro, após a alteração na quantidade de sinistros do cliente
+            cliente.setPreco_do_seguro((calcularPrecoSeguroCliente((ClientePF)cliente)));
+        } else if (cliente.getTipo().equals("PJ")) {
+            cliente.setPreco_do_seguro((calcularPrecoSeguroCliente((ClientePJ)cliente)));
+        }
+
         return true;
     }
 
@@ -160,18 +178,18 @@ public class Seguradora {
             System.out.println("[" + i + "]" + listaSinistros.get(i).toString());
     }
 
-    //???????????????????????????????????????????????????????????????w
+
     public double calcularPrecoSeguroCliente(ClientePF cliente) {//TODO remover os valores de entrada antigos
         double preco = cliente.calculaScore() * (1 + cliente.getQuantidade_de_sinistros());
         listaEntradas.add(preco);
-        System.out.println("O valor do seguro é:" + preco);
+        System.out.println("O valor do seguro de " + cliente.getNome() + "é: " + preco);
         return preco;
     }
 
     public double calcularPrecoSeguroCliente(ClientePJ cliente) {
         double preco = cliente.calculaScore() * (1 + cliente.getQuantidade_de_sinistros());
         listaEntradas.add(preco);
-        System.out.println("O valor do seguro é:" + preco);
+        System.out.println("O valor do seguro de " + cliente.getNome() + "é: " + preco);
         return preco;
     }
 
@@ -181,7 +199,14 @@ public class Seguradora {
             receita +=  cliente.getPreco_do_seguro();
         return receita;
     }
-    //???????????????????????????????????????????????????????????????w
+
+    public void transferirSeguro(Cliente fornecedor, Cliente recebedor) {
+        recebedor.getListaVeiculos().addAll(fornecedor.getListaVeiculos());
+        recebedor.setQuantidade_de_sinistros(fornecedor.getQuantidade_de_sinistros() + recebedor.getQuantidade_de_sinistros());
+        fornecedor.setQuantidade_de_sinistros(0);
+        fornecedor.getListaVeiculos().clear();
+    }
+
     public String toString(Seguradora seguradora) {
         String saída;
         saída = "As informações da seguradora são:\n" 

@@ -16,7 +16,7 @@ public class Main {
                            "2-) Listar;\n" + 
                            "3-) Excluir;\n" +
                            "4-) Gerer sinistro;\n" +
-                           "5-) Transferir seguro;\n" + //TODO falta implementar
+                           "5-) Transferir seguro;\n" +
                            "6-) Calcular receita seguradora;\n" +
                            "7-) Sair;");
             int comando = Integer.parseInt(input.nextLine());
@@ -49,7 +49,8 @@ public class Main {
                                 System.out.println("Cliente cadastrado com sucesso!");
                                 break;
                             case 2: 
-                                System.out.println("--" + SubMenuOpcoes.CADASTRAR_SEGURADORA.getOperacao() + "--"); //!Implementar um meio de cadastrar seguradoras
+                                System.out.println("--" + SubMenuOpcoes.CADASTRAR_SEGURADORA.getOperacao() + "--"); 
+                                System.out.println("O método de gerar seguradoras ainda não foi implementado.");//TODO Implementar um meio de cadastrar seguradoras
                                 break;
                             case 3:
                                 System.out.println("--" + SubMenuOpcoes.CADASTRAR_VEICULO.getOperacao() + "--");
@@ -57,6 +58,7 @@ public class Main {
                                 String nome = input.nextLine();
                                 
                                 Cliente cliente = seguradora.buscaCliente(nome);
+
 
                                 if (cliente == null)
                                     System.out.println("O cliente não está cadastrado. Tente novamente.");
@@ -66,8 +68,11 @@ public class Main {
                                     cliente.setListaVeiculos(veiculo);
                                     System.out.println("Veículo cadastrado com sucesso!");
 
-                                    //!/!!/!/!!
-
+                                    if (cliente.getTipo().equals("PF")){
+                                        cliente.setPreco_do_seguro(seguradora.calcularPrecoSeguroCliente((ClientePF)cliente));
+                                    } else if (cliente.getTipo().equals("PJ")) {
+                                        cliente.setPreco_do_seguro(seguradora.calcularPrecoSeguroCliente((ClientePJ)cliente));
+                                    }
                                 }
                                 break;
                             case 4:
@@ -125,7 +130,25 @@ public class Main {
                                     seguradora.excluirSinistro(sinistro);
                                 break;
                             case 3:
-                                //!Implementar uma forma de remover veículos
+                                System.out.println("Digite o nome do cliente proprietário:");
+                                String nome = input.nextLine();
+
+                                Cliente cliente = seguradora.buscaCliente(nome);
+
+
+                                if (cliente == null)
+                                    System.out.println("O cliente não está cadastrado. Tente novamente.");
+                                else {
+                                    System.out.println("Digite a placa do veículo:");
+                                    String placa = input.nextLine();
+                                    cliente.removerVeiculo(placa);
+                                    System.out.println("Veículo removido com sucesso!");
+                                }
+                                if (cliente.getTipo().equals("PF")){
+                                    cliente.setPreco_do_seguro(seguradora.calcularPrecoSeguroCliente((ClientePF)cliente));
+                                } else if (cliente.getTipo().equals("PJ")) {
+                                    cliente.setPreco_do_seguro(seguradora.calcularPrecoSeguroCliente((ClientePJ)cliente));
+                                }
                                 break;
                             case 4:
                                 break;
@@ -142,12 +165,28 @@ public class Main {
                     break;
                 case 5:
                     System.out.println("--" + MenuOperacoes.TRANSFERIR_SEGURO.getOperacao() + "--");
-                    //!Encontrar uma forma de transferir seguros
+                    System.out.println("Insira o nome de quem fornece o seguro:");
+                    String nome = input.nextLine();
+                    Cliente fornecedor = seguradora.buscaCliente(nome);
+                    System.out.println("Insira o nome de quem recebe o seguro:");
+                    nome = input.nextLine();
+                    Cliente recebedor = seguradora.buscaCliente(nome);
+                    seguradora.transferirSeguro(fornecedor, recebedor);
+                    if (fornecedor.getTipo().equals("PF")){
+                        fornecedor.setPreco_do_seguro(seguradora.calcularPrecoSeguroCliente((ClientePF)fornecedor));
+                    } else if (fornecedor.getTipo().equals("PJ")) {
+                        fornecedor.setPreco_do_seguro(seguradora.calcularPrecoSeguroCliente((ClientePJ)fornecedor));
+                    }
+                    if (recebedor.getTipo().equals("PF")){
+                        recebedor.setPreco_do_seguro(seguradora.calcularPrecoSeguroCliente((ClientePF)recebedor));
+                    } else if (recebedor.getTipo().equals("PJ")) {
+                        recebedor.setPreco_do_seguro(seguradora.calcularPrecoSeguroCliente((ClientePJ)recebedor));
+                    }
                     break;
                 case 6:
                     System.out.println("--" + MenuOperacoes.CALCULAR_RECEITA_SEGURADORA.getOperacao() + "--");
                     System.out.println(seguradora.calcularReceita());
-                    break; //!Precisa atualizar os valores dos seguros a medida que se adicionam sinistros
+                    break;
                 case 7:
                     System.out.println("--" + MenuOperacoes.SAIR.getOperacao() + "--");
                     fim = true;

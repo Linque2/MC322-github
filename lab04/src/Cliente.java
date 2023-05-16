@@ -2,7 +2,7 @@ import java.util.*;
 
 public class Cliente {
     //Difinição dos atributos da classe Cliente
-    private String tipo;
+    private final String tipo;
     private String nome;
     private String endereco;
     private LinkedList<Veículo> listaVeiculos;
@@ -15,6 +15,7 @@ public class Cliente {
         this.endereco = endereco;
         this.listaVeiculos = new LinkedList<Veículo>();
         this.quantidade_de_sinistros = 0;
+        this.tipo = tipo;
     }
 
     /*Definição dos métodos da classe Cliente*/
@@ -68,6 +69,14 @@ public class Cliente {
             System.out.println("[" + i + "]" + veiculo);
             i++;
         }
+    }
+    public boolean removerVeiculo(String placa) {
+        for (Veículo veiculo : getListaVeiculos()) {
+            if (veiculo.getPlaca().equals(placa))
+                getListaVeiculos().remove(veiculo);
+                return true;
+        }
+        return false;
     }
 
     public int quantidadeCarros() {
