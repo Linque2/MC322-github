@@ -83,5 +83,12 @@ public class Cliente {
         return this.getListaVeiculos().size();
     }
 
+    public String toString() {
+        String saida = "--Imprimindo Cliente" + getTipo() + "--\n" +
+                           "Nome: " + getNome() + "\n" +
+                           "Endereco: " + getEndereco() + "\n" +
+                           "Valor do seguro: " + getPreco_do_seguro() ;
+        return saida;
+    }
 
 }

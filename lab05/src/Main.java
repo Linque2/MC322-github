@@ -2,7 +2,19 @@ import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
-        Seguradora seguradora = new Seguradora(null, null, null, null);
+        Seguradora seguradora = new Seguradora("segI", "11999990000", "Rua A", "seg1@email.com");
+        ClientePF cliente0 = new ClientePF("172.242.425-78", "clienteI", "(73) 98084-6147", "Rua B", "cliente1@email.com", "masculino", "Ensino médio completo", LerEntrada.lerData("10/07/2000"));
+        ClientePJ cliente1 = new ClientePJ("64.284.773/0001-20", "clienteII", "(98) 96721-2761", "Rua C", "cliente2@email.com", LerEntrada.lerData("12/11/2016"));
+        seguradora.cadastrarCliente(cliente0);
+        seguradora.cadastrarCliente(cliente1);
+        seguradora.listarClientes();
+
+        Veículo veiculo0 = new Veículo("NWG-7154", "marca0", "modelo0", 1998);
+        cliente0.cadastrarVeiculo(veiculo0);
+        seguradora.gerarSeguro();
+        System.out.println(seguradora.getSegurosPorCliente("clienteI"));
+
+        /* Seguradora seguradora = new Seguradora(null, null, null, null);
         seguradora.lerSeguradora(seguradora);
 
         Scanner input = new Scanner(System.in);
@@ -178,6 +190,6 @@ public class Main {
                     fim = true;
                     break;
             }
-        }
-    }                   
+        } */
+    }               
 }

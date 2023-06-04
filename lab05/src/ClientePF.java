@@ -1,36 +1,30 @@
 import java.time.*;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class ClientePF extends Cliente {
+
     //Declarando os atributos da classe
-    private String CPF;
+    private final String cpf;
     private String genero;
-    private LocalDate dataLicenca;
     private String educacao;
-    private LocalDate dataNascimento;
-    private String classeEconomica;
-    private int Idade;
+    private LocalDate dataNasc;
+    private ArrayList<Veículo> listaVeiculos;
 
     //Construtor
-    public ClientePF(String nome, String endereco,LinkedList<Veículo> listaVeiculos , LocalDate dataLicenca, String educacao, String genero, String classeEconomica, String CPF, LocalDate dataNascimento, int quantidade_de_sinistros, String tipo) {
-        super(nome, endereco, listaVeiculos, quantidade_de_sinistros, tipo); //**
-        this.CPF = CPF;
+    public ClientePF(String cpf, String nome, String telefone, String endereco, String email, String genero, String educacao, LocalDate dataNasc) {
+        super(nome, telefone, endereco, email);
+        this.cpf = cpf;
         this.genero = genero;
-        this.dataLicenca = dataLicenca;
         this.educacao = educacao;
-        this.dataNascimento = dataNascimento;
-        this.classeEconomica = classeEconomica;
+        this.dataNasc = dataNasc;
+        this.listaVeiculos = new ArrayList<Veículo>(10);
     }
+
     /*Declarando os métodos da classe ClientePF*/
     //getters and setters
 
-    public String getCPF() {
-        return this.CPF;
-    }
-
-    public void setCPF(String CPF) {
-        this.CPF = CPF;
+    public String getCpf() {
+        return this.cpf;
     }
 
     public String getGenero() {
@@ -41,14 +35,6 @@ public class ClientePF extends Cliente {
         this.genero = genero;
     }
 
-    public LocalDate getDataLicenca() {
-        return this.dataLicenca;
-    }
-
-    public void setDataLicenca(LocalDate dataLicenca) {
-        this.dataLicenca = dataLicenca;
-    }
-
     public String getEducacao() {
         return this.educacao;
     }
@@ -57,34 +43,68 @@ public class ClientePF extends Cliente {
         this.educacao = educacao;
     }
 
-    public LocalDate getDataNascimento() {
-        return this.dataNascimento;
+    public LocalDate getDataNasc() {
+        return this.dataNasc;
     }
 
-    public void setDataNascimento(LocalDate dataNascimento) {
-        this.dataNascimento = dataNascimento;
+    public void setDataNasc(LocalDate dataNasc) {
+        this.dataNasc = dataNasc;
     }
 
-    public String getClasseEconomica() {
-        return this.classeEconomica;
+    public ArrayList<Veículo> getListaVeiculos() {
+        return this.listaVeiculos;
     }
 
-    public void setClasseEconomica(String classeEconomica) {
-        this.classeEconomica = classeEconomica;
-    }
-
-    public void setIdade() {
-        this.Idade = (Period.between(getDataNascimento(), LocalDate.now())).getYears();
-    }
-
-    public int getIdade() {
-        setIdade();
-        return this.Idade;
+    public void setListaVeiculos(ArrayList<Veículo> listaVeiculos) {
+        this.listaVeiculos = listaVeiculos;
     }
 
     //demais métodos
+    public boolean cadastrarVeiculo() { //? Pensar se o setListaVeículo faz sentido
+        Veículo veiculo = LerEntrada.lerVeiculo();
     
-    public double calculaScore() {
+        if (getListaVeiculos().contains(veiculo)) {
+            System.out.println("O veículo já está cadastrado");
+            return false;
+        }
+        getListaVeiculos().add(veiculo);  //TODO Verificar se a placa do veículo já existe
+        return true;
+    }
+
+    public boolean cadastrarVeiculo(Veículo veículo) { //? Pensar se o setListaVeículo faz sentido
+        if (getListaVeiculos().contains(veículo)) {
+            System.out.println("O veículo já está cadastrado");
+            return false;
+        }
+        getListaVeiculos().add(veículo);  //TODO Verificar se a placa do veículo já existe
+        return true;
+    }
+
+    public boolean removerVeiculo(Veículo veículo) {
+       return getListaVeiculos().remove(veículo);    //O método ArrayList.remove(object o) devolve um valor do tipo boolean por padrão, true caso "o" tenha sido removido da lista e false caso "o" não exista na lista, ou seja, não foi removido.
+    }
+
+    public void listarVeiculos() {
+        for (int i = 0; i < getListaVeiculos().size(); i++)
+            System.out.println("[" + i + "]" + getListaVeiculos().get(i).toString());
+    }
+
+    @Override
+    public String toString() {
+        String saida = "ClientePF{nome: " + getNome() +
+                        ", CPF: " + getCpf() + 
+                        ", Telefone: " + getTelefone() +
+                        ", Endereço: " + getEndereco() +
+                        ", Email: " + getEmail() + 
+                        ", Genero: " + getGenero() +
+                        ", Educação: " + getEducacao() +
+                        ", Data de nascimento: " + getDataNasc() + "}\n";
+
+        return saida;
+    }
+}
+    
+    /* public double calculaScore() {
         double score = CalcSeguro.VALOR_BASE.getFator() * quantidadeCarros();
         if (getIdade() >= 18 && getIdade() <= 30)
             score *= CalcSeguro.FATOR_18_30.getFator();
@@ -143,5 +163,5 @@ public class ClientePF extends Cliente {
                        "Endereco: " + getEndereco() + "\n" +
                        "Valor do seguro: " + getPreco_do_seguro();
         return saida;
-    }
-}
+    }*/
+

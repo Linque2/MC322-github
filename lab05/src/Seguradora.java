@@ -1,68 +1,243 @@
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Seguradora {
-    //Declaração dos atríbutos da classe Seguradora
+    /*Declaração dos atributos da classe Seguradora */
+    private final String cnpj;
     private String nome;
     private String telefone;
-    private String email;
     private String endereco;
-    private LinkedList<Sinistro> listaSinistros;
-    private LinkedList<Cliente> listaClientes;
-
-
-    //Construtor
-    public Seguradora(String nome, String telefone, String email, String endereco) {
-        this.nome = nome;
-        this.telefone = telefone;
-        this.email = email;
-        this.endereco = endereco;
-        this.listaSinistros = new LinkedList<Sinistro>();    
-        this.listaClientes = new LinkedList<Cliente>();       
-    }
+    private String email;
+    private ArrayList<Cliente> listaClientes;
+    private ArrayList<Seguro> listaSeguros;
 
     /* Declaração dos métodos da classe Seguradora */
-    //getters e setters
-    public String getNome() {
-        return nome;
+    //Construtor
+    public Seguradora(String nome, String telefone, String endereco, String email) {    
+        this.cnpj = LerEntrada.lerCnpj();
+        this.nome = nome;
+        this.telefone = telefone;
+        this.endereco = endereco;
+        this.email = email;
+        this.listaClientes = new ArrayList<Cliente>(10);
+        this.listaSeguros = new ArrayList<Seguro>(10); 
     }
+
+    //getters e setters
+    public String getCnpj() {
+        return this.cnpj;
+    }
+
+    public String getNome() {
+        return this.nome;
+    }
+
     public void setNome(String nome) {
         this.nome = nome;
     }
+
     public String getTelefone() {
-        return telefone;
+        return this.telefone;
     }
+
     public void setTelefone(String telefone) {
         this.telefone = telefone;
     }
-    public String getEmail() {
-        return email;
+
+    public String getEndereco() {
+        return this.endereco;
     }
+
+    public void setEndereco(String endereco) {
+        this.endereco = endereco;
+    }
+
+    public String getEmail() {
+        return this.email;
+    }
+
     public void setEmail(String email) {
         this.email = email;
     }
-    public String getEndereco() {
-        return endereco;
-    }
-    public void setEndereco(String endereco) {
-        this.endereco = endereco;
-    }    
-    public LinkedList<Sinistro> getListaSinistros() {
-        return this.listaSinistros;
-    }
-    public void setListaSinistros(Sinistro sinistro) {
-        this.listaSinistros.add(sinistro);
-    }
-    public LinkedList<Cliente> getListaClientes() {
+
+    public ArrayList<Cliente> getListaClientes() {
         return this.listaClientes;
     }
-    public void setListaClientes(Cliente cliente) {
-        this.listaClientes.add(cliente);
+
+    public void setListaClientes(ArrayList<Cliente> listaClientes) {
+        this.listaClientes = listaClientes;
+    }
+
+    public ArrayList<Seguro> getListaSeguros() {
+        return this.listaSeguros;
+    }
+
+    public void setListaSeguros(ArrayList<Seguro> listaSeguros) {
+        this.listaSeguros = listaSeguros;
     }
 
     //Demais métodos
+    public void listarClientes() {
+        for (int i = 0; i < getListaClientes().size(); i++) 
+            System.out.println("[" + i +"]" + getListaClientes().get(i).toString());
+    }
+
+    public boolean gerarSeguro() {  //?Deveria implementar um método para leeitura de suguros?
+        Scanner input = new  Scanner(System.in);
+        Seguro seguro;
+        System.out.println("Insira o nome do cliente: ");
+        String nomeCliente = input.nextLine();
+        Cliente cliente = buscaCliente(nomeCliente);
+
+        if (cliente instanceof ClientePF) 
+            seguro = LerEntrada.lerSeguro(this, (ClientePF)cliente);
+        else if (cliente instanceof ClientePJ) 
+            seguro = LerEntrada.lerSeguro(this, (ClientePJ)cliente);
+        else {
+            seguro = null;
+        }
+        /* if (cliente == null) {
+            System.out.println("O cliente " + nomeCliente + " não existe");
+            return false;
+        } */
+
+        if (seguro == null) {
+            System.out.println("Seguro inválido!");
+            return false;
+        }
+
+        getListaSeguros().add(seguro);
+        return true;    //! Verificar se o polimorfismo está funcionando
+    }
+
+    public boolean cancelarSeguro(int ID) {
+        Seguro seguro = buscaSeguro(ID);
+        if (seguro == null) {
+            System.out.println("O seguro " + ID + "não existe");
+            return false;
+        }
+
+        getListaSeguros().remove(seguro);
+        return true;
+    }
 
     public boolean cadastrarCliente(ClientePF cliente) {
+        if (Validacao.validarNome(cliente.getNome()) == false) {
+            System.out.println("Não foi possível cadastrar o cliente (Nome inválido)\n");
+            return false;
+        }
+        if (Validacao.validarCPF(cliente.getCpf()) == false) {
+            System.out.println("Não foi possível cadastrar o cliente (CPF inválido)\n");
+            return false;
+        }
+        getListaClientes().add(cliente);
+        return true;
+    }
+
+    public boolean cadastrarCliente(ClientePJ cliente) {
+        if (Validacao.validarNome(cliente.getNome()) == false) {
+            System.out.println("Não foi possível cadastrar o cliente (Nome inválido)\n");
+            return false;
+        }
+        if (Validacao.validarCNPJ(cliente.getCnpj()) == false) {
+            System.out.println("Não foi possível cadastrar o cliente (CNPJ; inválido)\n");
+            return false;
+        }
+        getListaClientes().add(cliente);
+        return true;
+    }
+
+    public boolean cadastrarCliente() {  //?Deveria implementar a leitura do cliente neste métoddo?
+        Cliente cliente;
+        Scanner input = new Scanner(System.in);
+        System.out.println("Digite o tipo de cliente:\n" + 
+                           "\t[PF] Para pessoa física;\n" + 
+                           "\t[PJ] Para pessoa jurídica;");
+        String tipo_cl = input.nextLine();
+
+        if (tipo_cl.equals("PF"))
+            cliente = LerEntrada.lerClientePF();
+        else if(tipo_cl.equals("PJ")) 
+            cliente = LerEntrada.lerClientePJ();
+        else {
+            System.out.println("Tipo inválido\n");
+            return false;
+        }
+            
+        
+
+        if (getListaClientes().contains(cliente)) {
+            System.out.println("O cliente [" + cliente.getNome() + "] já possui cadastro em nossa seguradora.");
+            return false;   // O método devolve falso caso o cliente inserido já esteja na lista de clientes
+        }
+
+        System.out.println("Cliente cadastrado com sucesso!");
+        getListaClientes().add(cliente);   
+        return true;
+    }
+
+    public boolean removerCliente(String nome) {
+        Cliente cliente = buscaCliente(nome);
+        if (cliente == null)
+            return false;
+        getListaClientes().remove(cliente);
+        return true;
+    }
+
+    public ArrayList<Seguro> getSegurosPorCliente(String nome) {
+        ArrayList<Seguro> segurosDoCliente = new ArrayList<Seguro>(10);
+        Cliente cliente = buscaCliente(nome);   //!pensar em como podemos aplicar o plomorfismo para estes métodos
+        if (cliente == null) {
+            System.out.println("O cliente " + nome + " não existe");
+            return null;
+        }
+        
+        for (int i = 0; i < getListaSeguros().size(); i++) {
+            if (getListaSeguros().get(i).getCliente().equals(cliente)) {
+                segurosDoCliente.add(getListaSeguros().get(i));
+            } 
+        }
+        return segurosDoCliente;    //TODO adicionar um caso se o cliente não possuir seguros
+    }
+
+    public String toString() {
+        String saida = "Seguradora{CNPJ: " + getCnpj() + 
+                        ", Nome: " + getNome() +
+                        ", Telefone: " + getTelefone() +
+                        ", Endereço: " + getEndereco() +
+                        ", Email: " + getEmail();
+        return saida;
+    }
+
+    // métodos que iteram sobre as listas de seguradora 
+
+    /*Método que devolve um cliente específico a partir da String nome inserida como parametro da função */
+    public Cliente buscaCliente(String nome) {
+        for (Cliente cliente : getListaClientes()) {
+            if (cliente.getNome().equals(nome))
+                return cliente;
+        }
+        return null;
+    }
+
+    public int buscaClienteIndex(String nome) {
+        for (int i = 0; i < getListaClientes().size(); i++) {
+            if (getListaClientes().get(i).getNome().equals(nome))
+                return i;
+        }
+        return -1;
+    }
+
+    public Seguro buscaSeguro(int ID) {
+        for (Seguro seguro : getListaSeguros()) {
+            if (seguro.getId() == ID)
+                return seguro;
+        }
+        return null;
+    } 
+}
+
+    /* public boolean cadastrarCliente(ClientePF cliente) {
         setListaClientes(cliente);
         return true;
     }
@@ -229,7 +404,6 @@ public class Seguradora {
         setEmail(input.nextLine());
         System.out.print("Endereço: ");
         setEndereco(input.nextLine());
-    }
-}
+    } */
 
 //TODO: calcularReceita(), calcularPrecoSeguro(), 

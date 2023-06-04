@@ -1,30 +1,25 @@
 import java.time.LocalDate;
 import java.util.*;
-import java.time.format.DateTimeFormatter;
 
 public class ClientePJ extends Cliente {
     //Definindo os atributos da classe
-    private String CNPJ;
+    private final String cnpj;
     private LocalDate dataFundação;
-    private int qtdeFuncionarios;
+    private ArrayList<Frota> listaFrota;
 
     //Construtor
-    public ClientePJ(String nome, String endereco, LinkedList<Veículo> listaVeiculos, String CNPJ, LocalDate dataFundação, int qtdeFuncionarios, int quantidade_de_sinistros, String tipo) {
-        super(nome, endereco, listaVeiculos, quantidade_de_sinistros, tipo);
-        this.CNPJ = CNPJ;
+    public ClientePJ(String cnpj, String nome, String telefone, String endereco, String email, LocalDate dataFundação) {
+        super(nome, telefone, endereco, email);
+        this.cnpj = cnpj;
         this.dataFundação = dataFundação;
-        this.qtdeFuncionarios = qtdeFuncionarios;
+        this.listaFrota = new ArrayList<Frota>(5); 
     }
 
     /*Definição dos métodos da classe ClientePJ*/
     //getters e setters
 
-    public String getCNPJ() {
-        return this.CNPJ;
-    }
-
-    public void setCNPJ(String CNPJ) {
-        this.CNPJ = CNPJ;
+    public String getCnpj() {
+        return this.cnpj;
     }
 
     public LocalDate getDataFundaçãO() {
@@ -35,17 +30,34 @@ public class ClientePJ extends Cliente {
         this.dataFundação = dataFundação;
     }
 
-    public int getQtdeFuncionarios() {
-		return this.qtdeFuncionarios;
-	}
+    public ArrayList<Frota> getListaFrota() {
+        return this.listaFrota;
+    }
 
-	public void setQtdeFuncionarios(int qtdeFuncionarios) {
-		this.qtdeFuncionarios = qtdeFuncionarios;
-	}
+    public void setListaFrota(ArrayList<Frota> listaFrota) {
+        this.listaFrota = listaFrota;
+    }
 
     //Demais métodos
+    public void listarFrotas() {
+        for (int i = 0; i < getListaFrota().size(); i++)
+        System.out.println("[" + i + "]" + getListaFrota().get(i).toString());
+    }
 
-    public double calculaScore() {
+    @Override
+    public String toString() {
+        String saida = "ClientePJ{nome: " + getNome() +
+                        ", CNPJ: " + getCnpj() + 
+                        ", Telefone: " + getTelefone() +
+                        ", Endereço: " + getEndereco() +
+                        ", Email: " + getEmail() + 
+                        ", Data de fundação: " + getDataFundaçãO() + "}\n";
+
+        return saida;
+    }
+    
+}
+    /* public double calculaScore() {
         double score = CalcSeguro.VALOR_BASE.getFator() * (1 + (getQtdeFuncionarios()/100)) * quantidadeCarros();
         return score;
     }
@@ -58,11 +70,11 @@ public class ClientePJ extends Cliente {
         boolean Inválido = false;
         do {
             if (Inválido == true)
-                System.out.println("CNPJ inválido. Insira novamente: ");
-            System.out.print("CNPJ: ");
-            setCNPJ(input.nextLine());
+                System.out.println("cnpj inválido. Insira novamente: ");
+            System.out.print("cnpj: ");
+            setcnpj(input.nextLine());
             Inválido = true;
-        }while(Validacao.validarCNPJ(cliente.getCNPJ()) == false);
+        }while(Validacao.validarcnpj(cliente.getcnpj()) == false);
 
         System.out.print("Data licença: [dd/MM/yyyy]");
         String data_fundação = input.nextLine();
@@ -78,10 +90,10 @@ public class ClientePJ extends Cliente {
     public String toString() {
         String saida = "--Imprimindo Cliente" + getTipo() + "--\n" +
                            "Nome: " + getNome() + "\n" +
-                           "CNPJ: " + getCNPJ() + "\n" +
+                           "cnpj: " + getcnpj() + "\n" +
                            "Endereco: " + getEndereco() + "\n" +
                            "Valor do seguro: " + getPreco_do_seguro() ;
         return saida;
-    }
-}
+    } */
+
 
