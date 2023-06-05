@@ -15,8 +15,8 @@ public class Condutor {
 
     /*métodos da classe Condutor */
     //Construtor
-    public Condutor(String nome, String telefone, String endereco, String email, LocalDate dataNasc, boolean autorizacao) {
-        this.cpf = LerEntrada.lerCpf();
+    public Condutor(String cpf, String nome, String telefone, String endereco, String email, LocalDate dataNasc, boolean autorizacao) {
+        this.cpf = cpf;
         this.nome = nome;
         this.telefone = telefone;
         this.endereco = endereco;

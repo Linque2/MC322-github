@@ -1,4 +1,4 @@
-import java.time.LocalDate;
+import java.time.*;
 import java.util.*;
 
 public class ClientePJ extends Cliente {
@@ -6,13 +6,15 @@ public class ClientePJ extends Cliente {
     private final String cnpj;
     private LocalDate dataFundação;
     private ArrayList<Frota> listaFrota;
+    private int qtdeFuncionarios;
 
     //Construtor
-    public ClientePJ(String cnpj, String nome, String telefone, String endereco, String email, LocalDate dataFundação) {
+    public ClientePJ(String cnpj, String nome, String telefone, String endereco, String email, LocalDate dataFundação, int qtdeFuncionarios) {
         super(nome, telefone, endereco, email);
         this.cnpj = cnpj;
         this.dataFundação = dataFundação;
         this.listaFrota = new ArrayList<Frota>(5); 
+        this.qtdeFuncionarios = qtdeFuncionarios;
     }
 
     /*Definição dos métodos da classe ClientePJ*/
@@ -22,11 +24,11 @@ public class ClientePJ extends Cliente {
         return this.cnpj;
     }
 
-    public LocalDate getDataFundaçãO() {
+    public LocalDate getDataFundação() {
         return this.dataFundação;
     }
 
-    public void setDataFundaçãO(LocalDate dataFundação) {
+    public void setDataFundação(LocalDate dataFundação) {
         this.dataFundação = dataFundação;
     }
 
@@ -38,10 +40,99 @@ public class ClientePJ extends Cliente {
         this.listaFrota = listaFrota;
     }
 
+    public int getQtdeFuncionarios() {
+        return this.qtdeFuncionarios;
+    }
+
+    public void setQtdeFuncionarios(int qtdeFuncionarios) {
+        this.qtdeFuncionarios = qtdeFuncionarios;
+    }
+
     //Demais métodos
     public void listarFrotas() {
         for (int i = 0; i < getListaFrota().size(); i++)
         System.out.println("[" + i + "]" + getListaFrota().get(i).toString());
+    }
+
+    public boolean cadastrarFrota(Frota frota) {
+        getListaFrota().add(frota);
+        return true;
+    }
+
+    public boolean atualizarFrota(Frota frota) {    //! buscar em listaFrota, if frota == null -> return false
+        Scanner input = new Scanner(System.in);
+        final int sair = 0, remover = 1, adicionar = 2, apagarFrota = 3;
+        int entrada = -1;
+        Veículo veiculo;
+
+        System.out.println("Insira a operação desejada: \n" +
+                            "[0]Sair;\n" +
+                            "[1]Remover veículo;\n" +
+                            "[2]Adicionar veículo;\n" +
+                            "[3] Apagar frota.s"); 
+
+        while (entrada != sair) {
+            entrada = Integer.parseInt(input.nextLine());
+            switch(entrada){
+                case sair:
+                    break;
+                case remover:
+                    System.out.println("Qual veículo deseja remover? \n Placa: ");
+                    veiculo = frota.buscarVeiculo(input.nextLine());
+                    frota.removerVeiculo(null);
+                    break;
+                case adicionar:
+                    veiculo = LerEntrada.lerVeiculo();
+                    frota.addVeiculo(veiculo);
+                    break;
+                case apagarFrota:
+                    getListaFrota().remove(frota);
+                    break;
+            }
+        }
+
+        return true;
+    }
+
+    public boolean getVeiculoPorFrota(Frota frota) {    //! melhorar a visualização; devolver false caso frota == null <- buscar frota na listaFrotas
+        System.out.println(frota.listarVeiculos());
+        return true;
+    }
+
+    @Override
+    public SeguroPJ lerSeguro(Seguradora seguradora) {
+        Scanner input = new Scanner(System.in);
+        SeguroPJ seguro;
+        LocalDate dataInicio;
+        LocalDate dataFim;
+        int valorMensal;
+        Frota frota;
+
+        System.out.println("Lendo SeguroPF: \n");
+
+        System.out.println("Data de criação do seguro: ");
+        dataInicio = LerEntrada.lerData();
+
+        System.out.println("Data de término do seguro: ");
+        dataFim = LerEntrada.lerData();
+
+        valorMensal = 0;
+
+        System.out.println("Qual frota deve ser vinculada ao seguro?");
+        listarFrotas();
+        System.out.println("Indice da frota: ");
+        int indice = Integer.parseInt(input.nextLine());
+        frota = getListaFrota().get(indice);
+
+
+        seguro = new SeguroPJ(dataInicio, dataFim, seguradora, valorMensal, frota, this);
+        return seguro;
+    }
+
+    public int anosPosFundacao() {
+        int idade;
+        idade = (Period.between(getDataFundação(), LocalDate.now())).getYears();
+        return idade;
     }
 
     @Override
@@ -51,7 +142,7 @@ public class ClientePJ extends Cliente {
                         ", Telefone: " + getTelefone() +
                         ", Endereço: " + getEndereco() +
                         ", Email: " + getEmail() + 
-                        ", Data de fundação: " + getDataFundaçãO() + "}\n";
+                        ", Data de fundação: " + getDataFundação() + "}\n";
 
         return saida;
     }

@@ -50,6 +50,8 @@ public abstract class Cliente {
     }
    
     /*Demais métodos */
-    
+    public Seguro lerSeguro(Seguradora seguradora) {
+        return null;
+    }
 
 }

@@ -80,13 +80,48 @@ public class ClientePF extends Cliente {
         return true;
     }
 
-    public boolean removerVeiculo(Veículo veículo) {
+    public boolean removerVeiculo(Veículo veículo) {    //! Implementar um método de busca, ou localizar pelo indice
        return getListaVeiculos().remove(veículo);    //O método ArrayList.remove(object o) devolve um valor do tipo boolean por padrão, true caso "o" tenha sido removido da lista e false caso "o" não exista na lista, ou seja, não foi removido.
     }
 
     public void listarVeiculos() {
         for (int i = 0; i < getListaVeiculos().size(); i++)
             System.out.println("[" + i + "]" + getListaVeiculos().get(i).toString());
+    }
+
+    public int calcularIdade() {
+        int idade;
+        idade = (Period.between(getDataNasc(), LocalDate.now())).getYears();
+        return idade;
+    }
+
+    @Override
+    public SeguroPF lerSeguro(Seguradora seguradora) {
+        Scanner input = new Scanner(System.in);
+        SeguroPF seguro;
+        LocalDate dataInicio;
+        LocalDate dataFim;
+        int valorMensal;
+        Veículo veiculo;
+
+        System.out.println("Lendo SeguroPF: \n");
+
+        System.out.println("Data de criação do seguro: ");
+        dataInicio = LerEntrada.lerData();
+
+        System.out.println("Data de término do seguro: ");
+        dataFim = LerEntrada.lerData();
+
+        valorMensal = 0;
+
+        System.out.println("Qual veículo deve ser vinculado ao seguro?");
+        listarVeiculos();
+        System.out.println("Indice do veículo: ");
+        int indice = Integer.parseInt(input.nextLine());
+        veiculo = getListaVeiculos().get(indice);
+
+        seguro = new SeguroPF(dataInicio, dataFim, seguradora, valorMensal, veiculo, this);
+        return seguro;
     }
 
     @Override

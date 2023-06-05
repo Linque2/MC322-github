@@ -35,22 +35,27 @@ public class Frota {
         return true;
     }
 
-    public boolean removerVeiculo(Veículo veículo) {
+    public boolean removerVeiculo(Veículo veículo) {    //! Adicionar um método de busca por string, ou remover pelo indice
         return getListaVeiculos().remove(veículo);    //O método ArrayList.remove(object o) devolve um valor do tipo boolean por padrão, true caso "o" tenha sido removido da lista e false caso "o" não exista na lista, ou seja, não foi removido.
      }
 
     public String listarVeiculos() {
         String saida = "";
         for (int i = 0; i < getListaVeiculos().size(); i++)
-            saida += "[" + i + "]" + getListaVeiculos().get(i).toString();
+            saida += "\t" + getListaVeiculos().get(i).toString();
         return saida;
+    }
+
+    public Veículo buscarVeiculo(String placa) {
+        for (Veículo veiculo : getListaVeiculos())
+            if (veiculo.getPlaca().equals(placa))
+                return veiculo;
+        return null;
     }
 
     public String toString() {
         String saida = "Frota{Código: " + getCode() +
-                        "Veículos: \n" + listarVeiculos() + "}\n";
+                        ", Veículos: \n" + listarVeiculos() + "}\n";
         return saida;
     }
-
-
 }

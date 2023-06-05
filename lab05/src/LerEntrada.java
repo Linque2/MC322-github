@@ -101,6 +101,7 @@ public class LerEntrada {
         String endereco;
         String email;
         LocalDate dataFundação;
+        int qtdeFuncionarios;
 
         System.out.print("Lendo ClientePJ: \n");
         do {
@@ -132,69 +133,11 @@ public class LerEntrada {
         System.out.print("Data fundação: [dd/MM/yyyy]");
         dataFundação = lerData();
 
-        cliente = new ClientePJ(cnpj, nome, telefone, endereco, email, dataFundação);
+        System.out.print("Quantidade de funcionários: ");
+        qtdeFuncionarios = Integer.parseInt(input.nextLine());
+
+        cliente = new ClientePJ(cnpj, nome, telefone, endereco, email, dataFundação, qtdeFuncionarios);
         return cliente;
-    }
-
-    static Seguro lerSeguro(Seguradora seguradora, Cliente cliente) {
-        return null;
-    }
-
-    static SeguroPF lerSeguro(Seguradora seguradora, ClientePF cliente) {
-        Scanner input = new Scanner(System.in);
-        SeguroPF seguro;
-        LocalDate dataInicio;
-        LocalDate dataFim;
-        int valorMensal;
-        Veículo veiculo;
-
-        System.out.println("Lendo SeguroPF: \n");
-
-        System.out.println("Data de criação do seguro: ");
-        dataInicio = lerData();
-
-        System.out.println("Data de término do seguro: ");
-        dataFim = lerData();
-
-        valorMensal = 0;
-
-        System.out.println("Qual veículo deve ser vinculado ao seguro?");
-        cliente.listarVeiculos();
-        System.out.println("Indice do veículo: ");
-        int indice = Integer.parseInt(input.nextLine());
-        veiculo = cliente.getListaVeiculos().get(indice);
-
-        seguro = new SeguroPF(dataInicio, dataFim, seguradora, valorMensal, veiculo, cliente);
-        return seguro;
-    }
-
-    static SeguroPJ lerSeguro(Seguradora seguradora, ClientePJ cliente) {
-        Scanner input = new Scanner(System.in);
-        SeguroPJ seguro;
-        LocalDate dataInicio;
-        LocalDate dataFim;
-        int valorMensal;
-        Frota frota;
-
-        System.out.println("Lendo SeguroPF: \n");
-
-        System.out.println("Data de criação do seguro: ");
-        dataInicio = lerData();
-
-        System.out.println("Data de término do seguro: ");
-        dataFim = lerData();
-
-        valorMensal = 0;
-
-        System.out.println("Qual frota deve ser vinculada ao seguro?");
-        cliente.listarFrotas();
-        System.out.println("Indice da frota: ");
-        int indice = Integer.parseInt(input.nextLine());
-        frota = cliente.getListaFrota().get(indice);
-
-
-        seguro = new SeguroPJ(dataInicio, dataFim, seguradora, valorMensal, frota, cliente);
-        return seguro;
     }
 
     static Veículo lerVeiculo() {
@@ -219,5 +162,59 @@ public class LerEntrada {
 
         veiculo = new Veículo(placa, marca, modelo, anoFabricacao);
         return veiculo;
+    }
+
+    static Condutor lerCondutor() {
+        Scanner input = new Scanner(System.in);
+        Condutor condutor;
+        String cpf, nome, telefone, endereco, email;
+        LocalDate dataNasc;
+        boolean autorizacao = true, Inválido = false;
+
+        do {
+            if (Inválido == true)
+                System.out.println("CPF inválido. Insira novamente: ");
+            System.out.print("CPF: ");
+            cpf = input.nextLine();
+            Inválido = true;
+        }while(Validacao.validarCPF(cpf) == false);
+        Inválido = false;
+
+        do {
+            if (Inválido == true)
+                System.out.println("Nome inválido. Insira novamente: ");
+            System.out.print("Nome: ");
+            nome = (input.nextLine());
+            Inválido = true;
+        }while(Validacao.validarNome(nome) == false);
+
+        System.out.println("Telefone: ");
+        telefone = input.nextLine();
+
+        System.out.println("Endereço: ");
+        endereco = input.nextLine();
+
+        System.out.println("Email: ");
+        email = input.nextLine();
+
+        System.out.print("Data de nascimento: [dd/MM/yyyy]");
+        dataNasc = lerData();
+
+        System.out.print("Autorização[S/N]: ");
+        String opcao = input.nextLine();
+        do {
+            Inválido = false;
+            if (opcao.equals("S") || opcao.equals("s") || opcao.equals("Sim") || opcao.equals("SIM") || opcao.equals("sim"))
+                autorizacao = true;
+            else if (opcao.equals("N") || opcao.equals("n") || opcao.equals("Não") || opcao.equals("NÃO") || opcao.equals("não"))
+                autorizacao = false;
+            else {
+                System.out.println("Resposta inválida. Insira[S/N]: ");
+                Inválido = true;
+            }
+        } while(Inválido == true);
+
+        condutor = new Condutor(cpf, nome, telefone, endereco, email, dataNasc, autorizacao);
+        return condutor;
     }
 }

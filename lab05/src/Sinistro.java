@@ -1,17 +1,18 @@
 import java.util.*;
+import java.time.*;
 
 public class Sinistro {
 
     /*Declaração dos atríbutos da classe Sinistro*/
     private final int id;
-    private String data;
+    private LocalDate data;
     private String endereco;
     private Condutor condutor;
     private Seguro seguro;
 
     /* Declaração dos métodos da classe Sinistro*/
     //Construtor 
-    public Sinistro(String data, String endereco, Condutor condutor, Seguro seguro) {
+    public Sinistro(LocalDate data, String endereco, Condutor condutor, Seguro seguro) {
         this.id = LerEntrada.criaIdAleatorio();
         this.data = data;
         this.endereco = endereco;
@@ -24,11 +25,11 @@ public class Sinistro {
         return id;
     }
 
-    public String getData() {
+    public LocalDate getData() {
         return this.data;
     }
 
-    public void setData(String data) {
+    public void setData(LocalDate data) {
         this.data = data;
     }
 

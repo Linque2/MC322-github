@@ -82,24 +82,18 @@ public class Seguradora {
             System.out.println("[" + i +"]" + getListaClientes().get(i).toString());
     }
 
-    public boolean gerarSeguro() {  //?Deveria implementar um método para leeitura de suguros?
+    public boolean gerarSeguro() { 
         Scanner input = new  Scanner(System.in);
         Seguro seguro;
         System.out.println("Insira o nome do cliente: ");
         String nomeCliente = input.nextLine();
         Cliente cliente = buscaCliente(nomeCliente);
 
-        if (cliente instanceof ClientePF) 
-            seguro = LerEntrada.lerSeguro(this, (ClientePF)cliente);
-        else if (cliente instanceof ClientePJ) 
-            seguro = LerEntrada.lerSeguro(this, (ClientePJ)cliente);
-        else {
-            seguro = null;
-        }
-        /* if (cliente == null) {
+        if (cliente == null) {
             System.out.println("O cliente " + nomeCliente + " não existe");
             return false;
-        } */
+        }
+        seguro = cliente.lerSeguro(this);
 
         if (seguro == null) {
             System.out.println("Seguro inválido!");
@@ -107,7 +101,7 @@ public class Seguradora {
         }
 
         getListaSeguros().add(seguro);
-        return true;    //! Verificar se o polimorfismo está funcionando
+        return true;   
     }
 
     public boolean cancelarSeguro(int ID) {
@@ -162,9 +156,7 @@ public class Seguradora {
         else {
             System.out.println("Tipo inválido\n");
             return false;
-        }
-            
-        
+        }             
 
         if (getListaClientes().contains(cliente)) {
             System.out.println("O cliente [" + cliente.getNome() + "] já possui cadastro em nossa seguradora.");
@@ -192,12 +184,36 @@ public class Seguradora {
             return null;
         }
         
-        for (int i = 0; i < getListaSeguros().size(); i++) {
+        for (int i = 0; i < getListaSeguros().size(); i++) {    //! Tentar aplicar o for aprimorado
             if (getListaSeguros().get(i).getCliente().equals(cliente)) {
                 segurosDoCliente.add(getListaSeguros().get(i));
             } 
         }
         return segurosDoCliente;    //TODO adicionar um caso se o cliente não possuir seguros
+    }
+
+    public ArrayList<Sinistro> getSinistrosPorCliente(String nome) {
+        ArrayList<Sinistro> sinistrosDoCliente = new ArrayList<Sinistro>(10);
+        Cliente cliente = buscaCliente(nome);
+        if (cliente == null) {
+            System.out.println("O cliente " + nome + " não existe");
+            return null;
+        }
+
+        for (int i = 0; i < getListaSeguros().size(); i++) {
+            if (getListaSeguros().get(i).getCliente().equals(cliente)) {
+                for (int j = 0; j < getListaSeguros().get(i).getListaSinistros().size(); j++)
+                    sinistrosDoCliente.add(getListaSeguros().get(i).getListaSinistros().get(i));
+            }
+        }
+        return sinistrosDoCliente;
+    }
+
+    public double calcularReceita() {
+        double receita = 0;
+        for (Seguro seguro : getListaSeguros())
+            receita += seguro.getValorMensal();
+        return receita;
     }
 
     public String toString() {
@@ -211,7 +227,7 @@ public class Seguradora {
 
     // métodos que iteram sobre as listas de seguradora 
 
-    /*Método que devolve um cliente específico a partir da String nome inserida como parametro da função */
+    /* Método que devolve um cliente específico a partir da String nome inserida como parametro da função */
     public Cliente buscaCliente(String nome) {
         for (Cliente cliente : getListaClientes()) {
             if (cliente.getNome().equals(nome))

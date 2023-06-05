@@ -1,5 +1,6 @@
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public abstract class Seguro {
     
@@ -10,11 +11,11 @@ public abstract class Seguro {
     private Seguradora seguradora;
     private ArrayList<Sinistro> listaSinistros;
     private ArrayList<Condutor> listaCondutores;
-    private int valorMensal;
+    private double valorMensal;
 
     /*Declaração dos métodos da classe Seguro */
     //Construtor
-    public Seguro(LocalDate dataInicio, LocalDate dataFim, Seguradora seguradora, int valorMensal) {
+    public Seguro(LocalDate dataInicio, LocalDate dataFim, Seguradora seguradora, double valorMensal) {
         this.id = LerEntrada.criaIdAleatorio();
         this.dataInicio = dataInicio;
         this.dataFim = dataFim;
@@ -69,11 +70,11 @@ public abstract class Seguro {
         this.listaCondutores = listaCondutores;
     }
 
-    public int getValorMensal() {
+    public double getValorMensal() {
         return this.valorMensal;
     }
 
-    public void setValorMensal(int valorMensal) {
+    public void setValorMensal(double valorMensal) {
         this.valorMensal = valorMensal;
     }
 
@@ -82,6 +83,12 @@ public abstract class Seguro {
     }
 
     //demais métodos
+    public boolean cadastrarCondutor() {
+        Condutor condutor = LerEntrada.lerCondutor();
+        getListaCondutores().add(condutor);
+        return true;
+    }
+
     public void desautorizarCondutor(Condutor condutor) {
         condutor.setAutorizacao(false);
     }
@@ -92,12 +99,37 @@ public abstract class Seguro {
 
     public double calcularValor() {
         double valor = 0;
-        //TODO
         return valor;
     }
 
-    public void geraSinistro() {
-        //TODO
+    public boolean gerarSinistro() {
+        Scanner input = new  Scanner(System.in);
+        int Indice;
+        Sinistro sinistro;
+        LocalDate data;
+        String endereco;
+        Condutor condutor;
+        Seguro seguro;
+
+        System.out.println("Lendo Sinistro: \nData: ");
+        data = LerEntrada.lerData();
+
+        System.out.println("Endereço: ");
+        endereco = input.nextLine();
+
+        System.out.println("Insira o indice do condutor associado: ");
+        listarCondutores();
+        System.out.println("Indice: ");
+        Indice = Integer.parseInt(input.nextLine());
+        condutor = getListaCondutores().get(Indice);
+
+        seguro = this;
+
+        sinistro = new Sinistro(data, endereco, condutor, seguro);
+        condutor.adicionarSinistro(sinistro);
+        getListaSinistros().add(sinistro);
+
+        return true;    
     }
 
     public String listarSinistros() {
@@ -110,8 +142,15 @@ public abstract class Seguro {
     public String listarCondutores() {
         String saida = "";
         for (int i = 0; i < getListaCondutores().size(); i++)
-            saida += "[" + i + "]" + getListaCondutores().get(i).toString();
+            saida += "[" + i + "]s" + getListaCondutores().get(i).toString();
         return saida;
+    }
+
+    public Sinistro buscaSinistro(int ID) {
+        for (Sinistro sinistro : getListaSinistros())
+            if (sinistro.getId() == ID)
+                return sinistro;
+        return null;
     }
 
     public String toString() {
