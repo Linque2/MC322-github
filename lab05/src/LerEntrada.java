@@ -217,4 +217,16 @@ public class LerEntrada {
         condutor = new Condutor(cpf, nome, telefone, endereco, email, dataNasc, autorizacao);
         return condutor;
     }
+
+    static Frota lerFrota(){
+        Scanner input = new Scanner(System.in);
+        Frota frota;
+        String code;
+
+        System.out.println("Lendo frota: \nCode: ");
+        code = input.nextLine();
+        
+        frota = new Frota(code);
+        return frota;
+    }
 }

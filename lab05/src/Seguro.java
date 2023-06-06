@@ -83,18 +83,23 @@ public abstract class Seguro {
     }
 
     //demais métodos
-    public boolean cadastrarCondutor() {
+    public boolean autorizarCondutor() {
         Condutor condutor = LerEntrada.lerCondutor();
         getListaCondutores().add(condutor);
         return true;
     }
 
-    public void desautorizarCondutor(Condutor condutor) {
-        condutor.setAutorizacao(false);
-    }
-
-    public void autorizarCondutor(Condutor condutor) {
-        condutor.setAutorizacao(true);
+    public boolean desautorizarCondutor() {
+        Scanner input = new Scanner(System.in);
+        int Indice;
+        Condutor condutor;
+        System.out.println("Insira o indice do condutor associado: ");
+        listarCondutores();
+        System.out.println("Indice: ");
+        Indice = Integer.parseInt(input.nextLine());
+        condutor = getListaCondutores().get(Indice);
+        getListaCondutores().remove(condutor);
+        return true;
     }
 
     public double calcularValor() {
@@ -118,9 +123,13 @@ public abstract class Seguro {
         endereco = input.nextLine();
 
         System.out.println("Insira o indice do condutor associado: ");
-        listarCondutores();
+        System.out.println(listarCondutores());
         System.out.println("Indice: ");
         Indice = Integer.parseInt(input.nextLine());
+        if (Indice >= getListaCondutores().size()) {
+            System.out.println("O índice inserido não contém nenhum condutor");
+            return false;
+        }
         condutor = getListaCondutores().get(Indice);
 
         seguro = this;
@@ -130,6 +139,17 @@ public abstract class Seguro {
         getListaSinistros().add(sinistro);
 
         return true;    
+    }
+
+    public boolean removerSinistro(Sinistro sinistro) {
+        if (sinistro == null) {
+            System.out.println("O sinistro digitado não existe");
+            return false;
+        }
+        getListaSinistros().remove(sinistro);
+        sinistro.getCondutor().getListaSinistros().remove(sinistro);
+        System.out.println("Sinistro removido com sucesso!");
+        return true;
     }
 
     public String listarSinistros() {
@@ -142,7 +162,7 @@ public abstract class Seguro {
     public String listarCondutores() {
         String saida = "";
         for (int i = 0; i < getListaCondutores().size(); i++)
-            saida += "[" + i + "]s" + getListaCondutores().get(i).toString();
+            saida += "[" + i + "] " + getListaCondutores().get(i).toString() + "\n";
         return saida;
     }
 

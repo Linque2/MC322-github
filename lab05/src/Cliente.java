@@ -54,4 +54,29 @@ public abstract class Cliente {
         return null;
     }
 
+    public boolean cadastrarVeiculo() {
+        return true;
+    }
+
+    public boolean cadastrarFrota(Frota frota) {
+        return true;
+    }
+
+    public void listarVeiculos() {
+    }
+
+    public boolean atualizarFrota(Frota frota) {
+        return true;
+    }
+
+    public boolean removerVeiculo(Veículo veículo) {    
+        return true;    
+    }
+
+    public void listarFrotas() {
+    }
+
+    public Frota buscarFrota(String code) {
+        return null;
+    }
 }

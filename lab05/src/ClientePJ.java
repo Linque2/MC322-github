@@ -55,8 +55,55 @@ public class ClientePJ extends Cliente {
     }
 
     public boolean cadastrarFrota(Frota frota) {
+        if (getListaFrota().contains(frota)){
+            System.out.println("Frota já cadastrada!");
+            return false;
+        }
+
         getListaFrota().add(frota);
         return true;
+    }
+
+    public boolean cadastrarVeiculo() { //? Pensar se o setListaVeículo faz sentido
+        Scanner input = new Scanner(System.in);
+        Veículo veiculo = LerEntrada.lerVeiculo();
+        int Indice;
+        System.out.println("A qual frota o carro será adicionado?");
+        listarFrotas();
+        System.out.print("Índice: ");
+        Indice = Integer.parseInt(input.nextLine());
+
+        if(Indice >= getListaFrota().size()) {
+            System.out.println("O índice inserido não corresponde a nenhuma frota.");
+            return false;
+        }
+
+        if (getListaFrota().get(Indice).getListaVeiculos().contains(veiculo)) {
+            System.out.println("O veículo já está cadastrado");
+            return false;
+        }
+        getListaFrota().get(Indice).addVeiculo(veiculo);
+        System.out.println("Veículo cadastrado com sucesso!");
+        return true;
+    }
+
+    public void listarVeiculos() {
+        listarFrotas();
+    }
+
+    public boolean removerVeiculo() {   
+        Scanner input = new Scanner(System.in);
+        System.out.print("Digite o code da frota a qual o veículo pertence: ");
+        listarFrotas();
+        String code = input.nextLine();
+        Frota frota = buscarFrota(code);
+
+        System.out.print("Agora digite a placa do veículo em questão: ");
+        String placa = input.nextLine();
+        Veículo veiculo = frota.buscarVeiculo(placa);
+        if (veiculo == null)
+            System.out.println("O veículo não está na frota");
+        return frota.getListaVeiculos().remove(veiculo);    
     }
 
     public boolean atualizarFrota(Frota frota) {    //! buscar em listaFrota, if frota == null -> return false
@@ -65,13 +112,12 @@ public class ClientePJ extends Cliente {
         int entrada = -1;
         Veículo veiculo;
 
-        System.out.println("Insira a operação desejada: \n" +
+        while (entrada != sair) {
+            System.out.println("Insira a operação desejada: \n" +
                             "[0]Sair;\n" +
                             "[1]Remover veículo;\n" +
                             "[2]Adicionar veículo;\n" +
-                            "[3] Apagar frota.s"); 
-
-        while (entrada != sair) {
+                            "[3]Excluir frota"); 
             entrada = Integer.parseInt(input.nextLine());
             switch(entrada){
                 case sair:
@@ -135,6 +181,13 @@ public class ClientePJ extends Cliente {
         return idade;
     }
 
+    public Frota buscarFrota(String code) {
+        for (Frota frota : getListaFrota())
+            if (frota.getCode().equals(code))
+                return frota;
+        return null;
+    }
+
     @Override
     public String toString() {
         String saida = "ClientePJ{nome: " + getNome() +
@@ -146,7 +199,6 @@ public class ClientePJ extends Cliente {
 
         return saida;
     }
-    
 }
     /* public double calculaScore() {
         double score = CalcSeguro.VALOR_BASE.getFator() * (1 + (getQtdeFuncionarios()/100)) * quantidadeCarros();

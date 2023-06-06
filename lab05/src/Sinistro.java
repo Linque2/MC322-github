@@ -60,8 +60,11 @@ public class Sinistro {
 
     //demais métodos
     public String toString(){
-        String saída = null;
-        //TODO
+        String saída = "Sinistro{ID: " + getId() + 
+                        ", Data: " + getData() +
+                        ", Endereço: " + getEndereco() +
+                        ", Condutor: " + getCondutor().getNome() +
+                        ", Seguro: " + getSeguro().getId() + " }";
         return saída;
     }
 }

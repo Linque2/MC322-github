@@ -11,7 +11,6 @@ public class Condutor {
     private String email;
     private LocalDate dataNasc;
     private ArrayList<Sinistro> listaSinistros;
-    private boolean autorizacao;
 
     /*métodos da classe Condutor */
     //Construtor
@@ -23,7 +22,6 @@ public class Condutor {
         this.email = email;
         this.dataNasc = dataNasc;
         this.listaSinistros = new ArrayList<Sinistro>(5);
-        this.autorizacao = autorizacao;
     }
 
     //getters e setters
@@ -79,18 +77,20 @@ public class Condutor {
         this.listaSinistros = listaSinistros;
     }
 
-    public boolean getAutorizacao() {
-        return this.autorizacao;
-    }
-
-    public void setAutorizacao(boolean autorizacao) {
-        this.autorizacao = autorizacao;
-    }
-
     //demais métodos
     public boolean adicionarSinistro(Sinistro sinistro) {
         getListaSinistros().add(sinistro);  //!Devolver false caso o sinistro já existir na lista
         return true;
+    }
+
+    public String toString() {
+        String saida = "Condutor{Nome: " + getNome() +
+                        ", CPF:" + getCpf() +
+                        ", Telefone: " + getTelefone() +
+                        ", Endereço: " + getEndereco() + 
+                        ", Email: " + getEmail() +
+                        ", Data de nascimento: " + getDataNasc();
+        return saida;
     }
 
 }

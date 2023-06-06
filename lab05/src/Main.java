@@ -2,7 +2,7 @@ import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
-        Seguradora seguradora = new Seguradora("segI", "11999990000", "Rua A", "seg1@email.com");
+        /* Seguradora seguradora = new Seguradora("segI", "11999990000", "Rua A", "seg1@email.com");
         ClientePF cliente0 = new ClientePF("172.242.425-78", "clienteI", "(73) 98084-6147", "Rua B", "cliente1@email.com", "masculino", "Ensino médio completo", LerEntrada.lerData("10/07/2000"));
         ClientePJ cliente1 = new ClientePJ("64.284.773/0001-20", "clienteII", "(98) 96721-2761", "Rua C", "cliente2@email.com", LerEntrada.lerData("12/11/2016"), 10);
         seguradora.cadastrarCliente(cliente0);
@@ -18,27 +18,41 @@ public class Main {
         cliente1.cadastrarFrota(frota0);
         frota0.addVeiculo(veiculo0);
         seguradora.gerarSeguro();
-        System.out.println(seguradora.getSegurosPorCliente("clienteII"));
-
-        
-
-        /* Seguradora seguradora = new Seguradora(null, null, null, null);
-        seguradora.lerSeguradora(seguradora);
+        System.out.println(seguradora.getSegurosPorCliente("clienteII")); */
 
         Scanner input = new Scanner(System.in);
-
-        boolean fim = false;
-        double preco;
+        String nome;
+        Cliente cliente;
+        Seguro seguro;
+        Sinistro sinistro;
+        Veículo veiculo;
+        int ID;
+        Seguradora seguradora = Seguradora.lerSeguradora();
+        boolean fim = false, trocaSeg = false;
+        //? double preco;
 
         while (fim == false) {
+            
+            if (trocaSeg == true) {
+                int Indice;
+                System.out.println("Para qual seguradora você deseja trocar?");
+                Seguradora.imprimirSeguradoras();
+                System.out.println("Índice: ");
+                Indice = Integer.parseInt(input.nextLine());
+                seguradora = Seguradora.getListaSeguradoras().get(Indice);
+                trocaSeg = false;
+            }
+
             System.out.println("Insira o comando que deseja: \n" +
                            "1-) Cadastros;\n" + 
                            "2-) Listar;\n" + 
                            "3-) Excluir;\n" +
                            "4-) Gerer sinistro;\n" +
-                           "5-) Transferir seguro;\n" +
-                           "6-) Calcular receita seguradora;\n" +
-                           "7-) Sair;");
+                           "5-) Gerar seguro;\n" +
+                           "6-) Atualizar frota;\n" +
+                           "7-) Calcular receita seguradora;\n" +
+                           "8-) Trocar de seguradora;\n" +
+                           "9-) Sair;");
             int comando = Integer.parseInt(input.nextLine());
             switch(comando){
                 case 1:
@@ -47,52 +61,46 @@ public class Main {
 
                     comando = Integer.parseInt(input.nextLine());
                         switch(comando){
-                            case 1:
+                            case 1: //Cadastrar cliente
                                 System.out.println("--" + SubMenuOpcoes.CADASTRAR_CLIENTE.getOperacao() + "--");
-                                System.out.println("Digite o tipo de cliente:\n" + 
-                                    "\t[PF] Para pessoa física;\n" + 
-                                    "\t[PJ] Para pessoa jurídica;");
-                                String tipo_cl = input.nextLine();
-                                if (tipo_cl.equals("PF")){
-                                    ClientePF cliente = new ClientePF("nome", "endereço", null, null, "educação", "genero", "classeEconomica", "CPF", null, 0, "PF");
-                                    cliente.lerClientePF(cliente);
-                                    seguradora.cadastrarCliente(cliente);
-                                    preco = seguradora.calcularPrecoSeguroCliente(cliente);
-                                    cliente.setPreco_do_seguro(preco);
-                                } else if(tipo_cl.equals("PJ")) {
-                                    ClientePJ cliente = new ClientePJ(null, null, null, null, null, 0, 0, "PJ");
-                                    cliente.lerClientePJ(cliente);
-                                    seguradora.cadastrarCliente(cliente);
-                                    preco = seguradora.calcularPrecoSeguroCliente(cliente);
-                                    cliente.setPreco_do_seguro(preco);
-                                }
-                                System.out.println("Cliente cadastrado com sucesso!");
+                                seguradora.cadastrarCliente();
                                 break;
-                            case 2: 
+                            case 2: //Cadastrar seguradora
                                 System.out.println("--" + SubMenuOpcoes.CADASTRAR_SEGURADORA.getOperacao() + "--"); 
-                                System.out.println("O método de gerar seguradoras ainda não foi implementado.");
-                                //TODO Implementar um meio de cadastrar seguradoras
+                                Seguradora.lerSeguradora();
                                 break;
-                            case 3:
+                            case 3: //Cadastrar veículo
                                 System.out.println("--" + SubMenuOpcoes.CADASTRAR_VEICULO.getOperacao() + "--");
-                                System.out.println("Digite o nome do cliente proprietário:");
-                                String nome = input.nextLine();
+                                System.out.print("Digite o nome do Cliente proprietário: ");
+                                nome = input.nextLine();
+                                cliente = seguradora.buscaCliente(nome);
+                                cliente.cadastrarVeiculo();
+                                seguradora.atulizarValoDosSeguros(cliente);
                                 
-                                Cliente cliente = seguradora.buscaCliente(nome);
-
-
-                                if (cliente == null)
-                                    System.out.println("O cliente não está cadastrado. Tente novamente.");
-                                else {
-                                    Veículo veiculo = new Veículo(null, null, null, 0);
-                                    veiculo.lerVeículo();
-                                    cliente.setListaVeiculos(veiculo);
-                                    System.out.println("Veículo cadastrado com sucesso!");
-
-                                    seguradora.recalcularPrecoSeguroCliente(cliente);
-                                }
                                 break;
-                            case 4:
+                            case 4: //Cadastrar frota
+                                System.out.println("--" + SubMenuOpcoes.CADASTRAR_FROTA.getOperacao() + "--");
+                                System.out.print("Digite o nome do Cliente proprietário: ");
+                                nome = input.nextLine();
+                                cliente = seguradora.buscaCliente(nome); 
+                                if (cliente instanceof ClientePF || cliente == null){
+                                    System.out.print("Só é possível associar uma frota a um cliente PJ");
+                                    break;  
+                                }
+                                cliente.cadastrarFrota(LerEntrada.lerFrota());
+                                break;
+                            case 5: //Autorizar condutor
+                                System.out.print("Digite o ID do seguro ao qual deseja vincular o condutor: ");
+                                ID = Integer.parseInt(input.nextLine());
+                                seguro = seguradora.buscaSeguro(ID);
+                                if (seguro == null) {
+                                    System.out.println("O seguro inserido não existe");
+                                    break;
+                                }
+                                seguro.autorizarCondutor();
+                                seguro.calcularValor();
+                                break;
+                            case 6: //Voltar
                                 break;
                         }
 
@@ -103,23 +111,26 @@ public class Main {
 
                     comando = Integer.parseInt(input.nextLine());
                         switch(comando){
-                            case 1:
+                            case 1: //Listar Clientes
                                 seguradora.listarClientes();
                                 break;
-                            case 2: 
-                                seguradora.listaSinistros();
+                            case 2: //Listar sinistros por cliente
+                                seguradora.imprimirSinistrosPorCliente();
                                 break;
-                            case 3:
-                                System.out.println("Digite o nome do cliente proprietário:");
-                                String nome = input.nextLine();
-                                Cliente cliente = seguradora.buscaCliente(nome);
-                                if (cliente == null)
-                                    System.out.println("O cliente não está cadastrado. Tente novamente.");
-                                else 
-                                    cliente.listarVeiculos();
+                            case 3: //Listar seguros por cliente
+                                seguradora.imprimirSegurosPorCliente();
                                 break;
-                            case 4:
+                            case 4: //Listar veículos do cliente (no caso do clente PJ imprime todos os veículos de todas as frotas)
+                                System.out.print("Digite o nome do cliente proprietário: ");
+                                nome = input.nextLine();
+                                cliente = seguradora.buscaCliente(nome);
+                                cliente.listarVeiculos();
+                                break;   
+                            case 5: //Listar seguradoras
+                                Seguradora.imprimirSeguradoras();
                                 break;
+                            case 6: //Voltar
+                                break; 
                         }
 
                     break;
@@ -129,7 +140,7 @@ public class Main {
 
                     comando = Integer.parseInt(input.nextLine());
                         switch(comando){
-                            case 1:
+                            case 1: //Excluir cliente
                             System.out.println("Digite o nome do cliente que deseja remover: ");
                             boolean sucesso = seguradora.removerCliente(input.nextLine());
                                 if (sucesso == true) 
@@ -137,67 +148,91 @@ public class Main {
                                 else
                                     System.out.println("Não foi possível fazer a remoção do cliente.");
                                 break;
-                            case 2:
-                                System.out.println("Digite o ID do sinistro que deseja remover.");
-                                int ID = Integer.parseInt(input.nextLine());
-                                Sinistro sinistro =  seguradora.buscaSinistro(ID);
-                                if (sinistro == null)
-                                    System.out.println("O ID inserido não corresponde a nenhum sinistro.");
-                                else
-                                    seguradora.excluirSinistro(sinistro);
-                                break;
-                            case 3:
-                                System.out.println("Digite o nome do cliente proprietário:");
-                                String nome = input.nextLine();
-
-                                Cliente cliente = seguradora.buscaCliente(nome);
-
-
-                                if (cliente == null)
-                                    System.out.println("O cliente não está cadastrado. Tente novamente.");
-                                else {
-                                    System.out.println("Digite a placa do veículo:");
-                                    String placa = input.nextLine();
-                                    cliente.removerVeiculo(placa);
-                                    System.out.println("Veículo removido com sucesso!");
+                            case 2: //Excluir sinistro
+                                System.out.print("Digite o ID do seguro do sinistro que deseja remover: ");
+                                ID = Integer.parseInt(input.nextLine());
+                                seguro = seguradora.buscaSeguro(ID);
+                                if (seguro == null) {
+                                    System.out.println("O seguro inserido não existe");
+                                    break;
                                 }
-                                seguradora.recalcularPrecoSeguroCliente(cliente);
+                                System.out.print("Agora insira o ID do sinistro: ");
+                                sinistro = seguro.buscaSinistro(ID);
+                                seguro.removerSinistro(sinistro);
+                                seguro.calcularValor();
                                 break;
-                            case 4:
+                            case 3: //Cancelar seguro
+                                System.out.print("Digite o ID do seguro cancelar: ");
+                                ID = Integer.parseInt(input.nextLine());
+                                seguradora.cancelarSeguro(ID);
+                                break;
+                            case 4: //Excluir veículo
+                                System.out.print("Digite o nome do Cliente proprietário: ");
+                                nome = input.nextLine();
+                                cliente = seguradora.buscaCliente(nome);
+                                seguradora.atulizarValoDosSeguros(cliente);
+                                break;
+                            case 5: //Desautorizar condutor
+                                System.out.print("Digite o ID do seguro associado ao condutor que deseja desautorizar: ");
+                                ID = Integer.parseInt(input.nextLine());
+                                seguro = seguradora.buscaSeguro(ID);
+                                if (seguro == null) {
+                                    System.out.println("O seguro inserido não existe");
+                                    break;
+                                }
+                                seguro.desautorizarCondutor();
+                                seguro.calcularValor();
+                                break;
+                            case 6: //Voltar
                                 break;
                         }
                         
                     break;
-                case 4:
-                    System.out.println("--" + MenuOperacoes.GERAR_SINISTRO.getOperacao() + "--");
-                    boolean sucesso = seguradora.gerarSinistro();
-                    if (sucesso == true) 
-                        System.out.println("Sinistro gerado com sucesso!");
-                    else
-                        System.out.println("Não foi possível concluir a geração do sinistro.");
+                case 4: //Gerar sinistro
+                    System.out.print("Digite o ID do seguro em que será registrado o seguro: ");
+                    ID = Integer.parseInt(input.nextLine());
+                    seguro = seguradora.buscaSeguro(ID);
+                    if (seguro == null) {
+                        System.out.println("O seguro inserido não existe");
+                        break;
+                    }
+                    seguro.gerarSinistro();
+                    seguro.calcularValor();
                     break;
-                case 5:
-                    System.out.println("--" + MenuOperacoes.TRANSFERIR_SEGURO.getOperacao() + "--");
-                    System.out.println("Insira o nome de quem fornece o seguro:");
-                    String nome = input.nextLine();
-                    Cliente fornecedor = seguradora.buscaCliente(nome);
-                    System.out.println("Insira o nome de quem recebe o seguro:");
+                case 5: //Gerar seguro
+                    seguradora.gerarSeguro();
+                    System.out.println("Seguro gerado com sucesso!");
+                    break;   
+                case 6: //Atualizar frota
+                    System.out.println("--" + MenuOperacoes.ATUALIZAR_FROTA.getOperacao() + "--");
+                    System.out.print("Digite o nome do Cliente proprietário da frota: ");
+                    Frota frota;
+                    String code;
                     nome = input.nextLine();
-                    Cliente recebedor = seguradora.buscaCliente(nome);
-                    seguradora.transferirSeguro(fornecedor, recebedor);
-
-                    seguradora.recalcularPrecoSeguroCliente(fornecedor);
-                    seguradora.recalcularPrecoSeguroCliente(recebedor);
+                    cliente = seguradora.buscaCliente(nome); 
+                    if (cliente instanceof ClientePF){
+                        System.out.print("Só é possível associar uma frota a um cliente PJ");
+                        break;  
+                    }
+                    cliente.listarFrotas();
+                    System.out.print("Digite o code da frota que deseja modificar: ");
+                    code = input.nextLine();
+                    frota = cliente.buscarFrota(code);
+                    cliente.atualizarFrota(frota);
                     break;
-                case 6:
+                case 7: //Calcular receita seguradora
                     System.out.println("--" + MenuOperacoes.CALCULAR_RECEITA_SEGURADORA.getOperacao() + "--");
                     System.out.println(seguradora.calcularReceita());
                     break;
-                case 7:
+                case 8: //Trocar de seguradora
+                    System.out.println("--" + MenuOperacoes.TROCAR_SEGURADORA.getOperacao() + "--");
+                    trocaSeg = true;    //TODO testar tirar a função do inicio e colocar aqui
+                    break;
+                case 9: //Sair
                     System.out.println("--" + MenuOperacoes.SAIR.getOperacao() + "--");
                     fim = true;
                     break;
             }
-        } */
+        }
     }               
 }

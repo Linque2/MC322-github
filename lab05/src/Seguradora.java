@@ -3,6 +3,7 @@ import java.util.Scanner;
 
 public class Seguradora {
     /*Declaração dos atributos da classe Seguradora */
+    private static ArrayList<Seguradora> listaSeguradoras = new ArrayList<>(10);
     private final String cnpj;
     private String nome;
     private String telefone;
@@ -24,6 +25,10 @@ public class Seguradora {
     }
 
     //getters e setters
+    public static ArrayList<Seguradora> getListaSeguradoras() {
+        return listaSeguradoras;
+    }
+
     public String getCnpj() {
         return this.cnpj;
     }
@@ -172,6 +177,9 @@ public class Seguradora {
         Cliente cliente = buscaCliente(nome);
         if (cliente == null)
             return false;
+        ArrayList<Seguro> segurosDoCliente = getSegurosPorCliente(nome);
+        for (Seguro seguro : segurosDoCliente)
+            cancelarSeguro(seguro.getId());
         getListaClientes().remove(cliente);
         return true;
     }
@@ -225,7 +233,55 @@ public class Seguradora {
         return saida;
     }
 
-    // métodos que iteram sobre as listas de seguradora 
+    static Seguradora lerSeguradora() {
+            Scanner input = new Scanner(System.in);
+            Seguradora seguradora;
+            String nome, telefone, endereco, email;
+            System.out.println("Lendo seguradora:\nNome: ");
+            nome = input.nextLine();
+            System.out.println("Telefone: ");
+            telefone = input.nextLine();
+            System.out.println("Endereço: ");
+            endereco = input.nextLine();
+            System.out.println("Email: ");
+            email = input.nextLine();
+            seguradora = new Seguradora(nome, telefone, endereco, email);
+            System.out.println("Seguradora " + nome + " cadastrada com sucesso!");
+            getListaSeguradoras().add(seguradora);
+            return seguradora;
+    }
+
+    static void imprimirSeguradoras() {
+        for (int i = 0; i < getListaSeguradoras().size(); i++)
+            System.out.println("[" + i + "]" + getListaSeguradoras().get(i).toString());
+    }
+
+    public void imprimirSegurosPorCliente() {
+        Scanner input = new Scanner(System.in);
+        System.out.print("Digite o nome do cliente que se deseja visualizar os seguros: ");
+        String nome = input.nextLine();
+        ArrayList<Seguro> seguros = getSegurosPorCliente(nome);
+        for (int i = 0; i < seguros.size(); i++)
+            System.out.println("[" + i + "] " + seguros.get(i).toString());          
+    }
+
+    public void imprimirSinistrosPorCliente() {
+        Scanner input = new Scanner(System.in);
+        System.out.print("Digite o nome do cliente que se deseja visualizar os sinistros: ");
+        String nome = input.nextLine();
+        ArrayList<Sinistro> sinistros = getSinistrosPorCliente(nome);
+        for (int i = 0; i < sinistros.size(); i++)
+            System.out.println("[" + i + "] " + sinistros.get(i).toString());          
+    }
+
+    public boolean atulizarValoDosSeguros(Cliente cliente) {
+        ArrayList<Seguro> seguros = getSegurosPorCliente(cliente.getNome());
+        for (Seguro seguro : seguros)
+            seguro.calcularValor();
+        return true;
+    }
+
+    // métodos que buscam nas listas de seguradora 
 
     /* Método que devolve um cliente específico a partir da String nome inserida como parametro da função */
     public Cliente buscaCliente(String nome) {
@@ -251,6 +307,7 @@ public class Seguradora {
         }
         return null;
     } 
+
 }
 
     /* public boolean cadastrarCliente(ClientePF cliente) {

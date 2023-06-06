@@ -80,8 +80,21 @@ public class ClientePF extends Cliente {
         return true;
     }
 
-    public boolean removerVeiculo(Veículo veículo) {    //! Implementar um método de busca, ou localizar pelo indice
-       return getListaVeiculos().remove(veículo);    //O método ArrayList.remove(object o) devolve um valor do tipo boolean por padrão, true caso "o" tenha sido removido da lista e false caso "o" não exista na lista, ou seja, não foi removido.
+    public boolean removerVeiculo() {    //! Implementar um método de busca, ou localizar pelo indice
+        Scanner input = new Scanner(System.in);
+        System.out.print("Digite a placa do veículo que deseja remover: ");
+        String placa = input.nextLine();
+        Veículo veiculo = buscarVeiculo(placa);
+        if (veiculo == null)
+            System.out.println("O veículo não está na lista");
+        return getListaVeiculos().remove(veiculo);    //O método ArrayList.remove(object o) devolve um valor do tipo boolean por padrão, true caso "o" tenha sido removido da lista e false caso "o" não exista na lista, ou seja, não foi removido.
+    }
+
+    public Veículo buscarVeiculo(String placa) {
+        for (Veículo veiculo : getListaVeiculos())
+            if (veiculo.getPlaca().equals(placa))
+                return veiculo;
+        return null;
     }
 
     public void listarVeiculos() {

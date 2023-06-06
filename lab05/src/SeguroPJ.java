@@ -38,20 +38,12 @@ public class SeguroPJ extends Seguro{
     public double calcularValor() {
         double valor = 0;
             valor = CalcSeguro.VALOR_BASE.getFator() * (10 * (getCliente().getQtdeFuncionarios()/10)) *
-                                                     (1 + 1/(qtdeVeiculos() + 2)) *
+                                                     (1 + 1/(frota.getListaVeiculos().size() + 2)) *
                                                      (1 + 1/(getCliente().anosPosFundacao() + 2)) *
                                                      (2 + getListaSinistros().size()/10) *
                                                      (5 + qtdeSinistrosCondutores()/10);
             setValorMensal(valor);
         return valor;
-    }
-
-    /* Método que calcula a quantidade total de veículos que um ClientePJ possui, consideranto todas as suas frotas */
-    public int qtdeVeiculos() {
-        int qtde = 0;
-        for (Frota frota : getCliente().getListaFrota())
-            qtde += frota.getListaVeiculos().size();    
-        return qtde;
     }
 
     /* Método que itera sobre a lista de condutores de um seguro, fazendo a somatória de seus sinistros */
