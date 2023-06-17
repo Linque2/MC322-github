@@ -2,46 +2,47 @@ import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
-        /* Seguradora seguradora = new Seguradora("segI", "11999990000", "Rua A", "seg1@email.com");
+
+        /* Instanciação de um objeto de cada classe */
+        Seguradora seguradora = new Seguradora("88.287.107/0001-03", "segI", "11999990000", "Rua A", "seg1@email.com");
+        Seguradora.getListaSeguradoras().add(seguradora);
         ClientePF cliente0 = new ClientePF("172.242.425-78", "clienteI", "(73) 98084-6147", "Rua B", "cliente1@email.com", "masculino", "Ensino médio completo", LerEntrada.lerData("10/07/2000"));
         ClientePJ cliente1 = new ClientePJ("64.284.773/0001-20", "clienteII", "(98) 96721-2761", "Rua C", "cliente2@email.com", LerEntrada.lerData("12/11/2016"), 10);
         seguradora.cadastrarCliente(cliente0);
         seguradora.cadastrarCliente(cliente1);
-        seguradora.listarClientes();
 
         Veículo veiculo0 = new Veículo("NWG-7154", "marca0", "modelo0", 1998);
         cliente0.cadastrarVeiculo(veiculo0);
-        seguradora.gerarSeguro();
-        System.out.println(seguradora.getSegurosPorCliente("clienteI"));
 
         Frota frota0 = new Frota("00001");
+        Veículo veiculo1 = new Veículo("EGB-5674", "marca1", "modelo1", 2014);
         cliente1.cadastrarFrota(frota0);
+        frota0.addVeiculo(veiculo1);
         frota0.addVeiculo(veiculo0);
-        seguradora.gerarSeguro();
-        System.out.println(seguradora.getSegurosPorCliente("clienteII")); */
 
+        SeguroPF seguro0 = new SeguroPF(LerEntrada.lerData("10/05/2019"), LerEntrada.lerData("12/11/2022"), seguradora, 0, veiculo0, cliente0);
+        seguro0.calcularValor();
+        seguradora.getListaSeguros().add(seguro0);
+
+        SeguroPJ seguro1 = new SeguroPJ(LerEntrada.lerData("10/05/2019"), LerEntrada.lerData("12/11/2022"), seguradora, 0, frota0, cliente1);
+        seguro1.calcularValor();
+        seguradora.getListaSeguros().add(seguro1);
+
+        Condutor condutor = new Condutor("435.445.382-70", "CondI", "(53) 3822-8025", "Rua B", "condutor1@email.com", null, true);
+        Sinistro sinistro0 = new Sinistro(LerEntrada.lerData("10/05/2019"), "Rua A", condutor, seguro1);
+        seguro1.gerarSinistro(sinistro0);
+
+        /* Implementação do menu de operações */
         Scanner input = new Scanner(System.in);
-        String nome;
+        String nome, placa;
         Cliente cliente;
         Seguro seguro;
         Sinistro sinistro;
         Veículo veiculo;
         int ID;
-        Seguradora seguradora = Seguradora.lerSeguradora();
-        boolean fim = false, trocaSeg = false;
-        //? double preco;
+        boolean fim = false;
 
         while (fim == false) {
-            
-            if (trocaSeg == true) {
-                int Indice;
-                System.out.println("Para qual seguradora você deseja trocar?");
-                Seguradora.imprimirSeguradoras();
-                System.out.println("Índice: ");
-                Indice = Integer.parseInt(input.nextLine());
-                seguradora = Seguradora.getListaSeguradoras().get(Indice);
-                trocaSeg = false;
-            }
 
             System.out.println("Insira o comando que deseja: \n" +
                            "1-) Cadastros;\n" + 
@@ -55,7 +56,7 @@ public class Main {
                            "9-) Sair;");
             int comando = Integer.parseInt(input.nextLine());
             switch(comando){
-                case 1:
+                case 1: //Cadastros
                     System.out.println("--" + MenuOperacoes.CADASTROS.getOperacao() + "--");
                     MenuOperacoes.CADASTROS.imprimirSubmenus();
 
@@ -75,8 +76,7 @@ public class Main {
                                 nome = input.nextLine();
                                 cliente = seguradora.buscaCliente(nome);
                                 cliente.cadastrarVeiculo();
-                                seguradora.atulizarValoDosSeguros(cliente);
-                                
+                                seguradora.atulizarValoDosSeguros(cliente);                            
                                 break;
                             case 4: //Cadastrar frota
                                 System.out.println("--" + SubMenuOpcoes.CADASTRAR_FROTA.getOperacao() + "--");
@@ -105,10 +105,9 @@ public class Main {
                         }
 
                     break;
-                case 2:
+                case 2: //Listagens
                     System.out.println("--" + MenuOperacoes.LISTAR.getOperacao() + "--");
                     MenuOperacoes.LISTAR.imprimirSubmenus();
-
                     comando = Integer.parseInt(input.nextLine());
                         switch(comando){
                             case 1: //Listar Clientes
@@ -134,7 +133,7 @@ public class Main {
                         }
 
                     break;
-                case 3:
+                case 3: //Exclusões
                     System.out.println("--" + MenuOperacoes.EXCLUIR.getOperacao() + "--");
                     MenuOperacoes.EXCLUIR.imprimirSubmenus();
 
@@ -170,6 +169,11 @@ public class Main {
                                 System.out.print("Digite o nome do Cliente proprietário: ");
                                 nome = input.nextLine();
                                 cliente = seguradora.buscaCliente(nome);
+                                System.out.print("Digite a placa do veículo que deseja remover: ");
+                                placa = input.nextLine();
+                                veiculo = cliente.buscarVeiculo(placa);
+                                cliente.removerVeiculo(veiculo);
+                                seguradora.cancelarSeguro((ClientePF)cliente, veiculo);
                                 seguradora.atulizarValoDosSeguros(cliente);
                                 break;
                             case 5: //Desautorizar condutor
@@ -215,10 +219,11 @@ public class Main {
                         break;  
                     }
                     cliente.listarFrotas();
-                    System.out.print("Digite o code da frota que deseja modificar: ");
+                    System.out.print("Digite o código da frota que deseja modificar: ");
                     code = input.nextLine();
                     frota = cliente.buscarFrota(code);
                     cliente.atualizarFrota(frota);
+                    seguradora.atulizarValoDosSeguros(cliente);
                     break;
                 case 7: //Calcular receita seguradora
                     System.out.println("--" + MenuOperacoes.CALCULAR_RECEITA_SEGURADORA.getOperacao() + "--");
@@ -226,7 +231,12 @@ public class Main {
                     break;
                 case 8: //Trocar de seguradora
                     System.out.println("--" + MenuOperacoes.TROCAR_SEGURADORA.getOperacao() + "--");
-                    trocaSeg = true;    //TODO testar tirar a função do inicio e colocar aqui
+                    int Indice;
+                    System.out.println("Para qual seguradora você deseja trocar?");
+                    Seguradora.imprimirSeguradoras();
+                    System.out.println("Índice: ");
+                    Indice = Integer.parseInt(input.nextLine());
+                    seguradora = Seguradora.getListaSeguradoras().get(Indice);
                     break;
                 case 9: //Sair
                     System.out.println("--" + MenuOperacoes.SAIR.getOperacao() + "--");

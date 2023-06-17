@@ -80,11 +80,7 @@ public class ClientePF extends Cliente {
         return true;
     }
 
-    public boolean removerVeiculo() {    //! Implementar um método de busca, ou localizar pelo indice
-        Scanner input = new Scanner(System.in);
-        System.out.print("Digite a placa do veículo que deseja remover: ");
-        String placa = input.nextLine();
-        Veículo veiculo = buscarVeiculo(placa);
+    public boolean removerVeiculo(Veículo veiculo) {    //! Implementar um método de busca, ou localizar pelo indice
         if (veiculo == null)
             System.out.println("O veículo não está na lista");
         return getListaVeiculos().remove(veiculo);    //O método ArrayList.remove(object o) devolve um valor do tipo boolean por padrão, true caso "o" tenha sido removido da lista e false caso "o" não exista na lista, ou seja, não foi removido.
@@ -148,68 +144,7 @@ public class ClientePF extends Cliente {
                         ", Educação: " + getEducacao() +
                         ", Data de nascimento: " + getDataNasc() + "}\n";
 
-        return saida;
+       return saida;
     }
 }
-    
-    /* public double calculaScore() {
-        double score = CalcSeguro.VALOR_BASE.getFator() * quantidadeCarros();
-        if (getIdade() >= 18 && getIdade() <= 30)
-            score *= CalcSeguro.FATOR_18_30.getFator();
-        else if (getIdade() >= 30 && getIdade() <= 60)
-            score *= CalcSeguro.FATOR_30_60.getFator();
-        else if (getIdade() >= 60 && getIdade() <= 90)
-            score *= CalcSeguro.FATOR_60_90.getFator(); 
-        return score;
-    }
-
-    public void lerClientePF(ClientePF cliente) {
-        Scanner input = new Scanner(System.in);
-        System.out.print("Lendo ClientePF: \n ");
-
-        boolean Inválido = false;
-        do {
-            if (Inválido == true)
-                System.out.println("Nome inválido. Insira novamente: ");
-            System.out.print("Nome: ");
-            setNome(input.nextLine());
-            Inválido = true;
-        }while(Validacao.validarNome(cliente.getNome()) == false);
-        
-        Inválido = false;
-        do {
-            if (Inválido == true)
-                System.out.println("CPF inválido. Insira novamente: ");
-            System.out.print("CPF: ");
-            setCPF(input.nextLine());
-            Inválido = true;
-        }while(Validacao.validarCPF(cliente.getCPF()) == false);
-
-        System.out.print("Data licença: [dd/MM/yyyy]");
-        String data_licença = input.nextLine();
-        DateTimeFormatter formatador_de_data = DateTimeFormatter.ofPattern("dd/MM/yyy", new Locale("pt", "BR"));
-        cliente.dataNascimento = LocalDate.parse(data_licença, formatador_de_data);
-
-        System.out.print("Nível de educação: ");
-        setEducacao(input.nextLine());
-
-        System.out.print("Data de nascimento: [dd/MM/yyyy]");
-        String data_de_nascimento = input.nextLine();
-        cliente.dataNascimento = LocalDate.parse(data_de_nascimento, formatador_de_data);
-
-        System.out.print("Endereço: ");
-        setEndereco(input.nextLine());
-
-        System.out.print("Classe econômica: ");
-        setClasseEconomica(input.nextLine());
-    }
-
-    public String toString() {
-        String saida = "--Imprimindo Cliente" + getTipo() + "--\n" +
-                       "Nome: " + getNome() + "\n" +
-                       "CPF: " + getCPF() + "\n" +
-                       "Endereco: " + getEndereco() + "\n" +
-                       "Valor do seguro: " + getPreco_do_seguro();
-        return saida;
-    }*/
 

@@ -73,10 +73,18 @@ public abstract class Cliente {
         return true;    
     }
 
+    public boolean removerVeiculo() {    
+        return true;    
+    }
+
     public void listarFrotas() {
     }
 
     public Frota buscarFrota(String code) {
+        return null;
+    }
+
+    public Veículo buscarVeiculo(String veiculo) {
         return null;
     }
 }

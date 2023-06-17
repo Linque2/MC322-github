@@ -20,13 +20,30 @@ public class LerEntrada {
 
     static String lerCpf() {
         Scanner input = new Scanner(System.in);
-        String cpf = input.nextLine();
+        String cpf;
+        boolean Inválido = false;
+        do {
+            if (Inválido == true)
+                System.out.println("CPF inválido. Insira novamente: ");
+            System.out.print("CPF: ");
+            cpf = input.nextLine();
+            Inválido = true;
+        }while(Validacao.validarCPF(cpf) == false);
+        
         return cpf;
     }
 
     static String lerCnpj() {
         Scanner input = new Scanner(System.in);
-        String cnpj = input.nextLine();
+        String cnpj;
+        boolean Inválido = false;
+        do {
+            if (Inválido == true)
+                System.out.println("CNPJ inválido. Insira novamente: ");
+            System.out.print("CNPJ: ");
+            cnpj = input.nextLine();
+            Inválido = true;
+        }while(Validacao.validarCNPJ(cnpj) == false);
         return cnpj;
     }
 
@@ -50,16 +67,9 @@ public class LerEntrada {
         String educacao;
         LocalDate dataNasc;
 
-        System.out.print("Lendo ClientePF: \n ");
+        System.out.println("--Lendo ClientePF--");
 
-        do {
-            if (Inválido == true)
-                System.out.println("CPF inválido. Insira novamente: ");
-            System.out.print("CPF: ");
-            cpf = input.nextLine();
-            Inválido = true;
-        }while(Validacao.validarCPF(cpf) == false);
-        Inválido = false;
+        cpf = lerCpf();
 
         do {
             if (Inválido == true)
@@ -69,16 +79,16 @@ public class LerEntrada {
             Inválido = true;
         }while(Validacao.validarNome(nome) == false);
 
-        System.out.println("Telefone: ");
+        System.out.print("Telefone: ");
         telefone = input.nextLine();
 
-        System.out.println("Endereço: ");
+        System.out.print("Endereço: ");
         endereco = input.nextLine();
 
-        System.out.println("Email: ");
+        System.out.print("Email: ");
         email = input.nextLine();
 
-        System.out.println("Genero: ");
+        System.out.print("Genero: ");
         genero = input.nextLine();
 
         System.out.print("Nível de educação: ");
@@ -103,15 +113,9 @@ public class LerEntrada {
         LocalDate dataFundação;
         int qtdeFuncionarios;
 
-        System.out.print("Lendo ClientePJ: \n");
-        do {
-            if (Inválido == true)
-                System.out.println("cnpj inválido. Insira novamente: ");
-            System.out.print("cnpj: ");
-            cnpj = input.nextLine();
-            Inválido = true;
-        }while(Validacao.validarCNPJ(cnpj) == false);
-        Inválido = false;
+        System.out.println("--Lendo ClientePJ--");
+        
+        cnpj = lerCnpj();
 
         do {
             if (Inválido == true)
@@ -121,13 +125,13 @@ public class LerEntrada {
             Inválido = true;
         }while(Validacao.validarNome(nome) == false);
 
-        System.out.println("Telefone: ");
+        System.out.print("Telefone: ");
         telefone = input.nextLine();
 
-        System.out.println("Endereço: ");
+        System.out.print("Endereço: ");
         endereco = input.nextLine();
 
-        System.out.println("Email: ");
+        System.out.print("Email: ");
         email = input.nextLine();
 
         System.out.print("Data fundação: [dd/MM/yyyy]");
@@ -148,16 +152,16 @@ public class LerEntrada {
         String modelo;
         int anoFabricacao;
 
-        System.out.println("Lendo veículo: \nPlaca: ");
+        System.out.print("--Lendo veículo--\nPlaca: ");
         placa = input.nextLine();
         
-        System.out.println("Marca: ");
+        System.out.print("Marca: ");
         marca = input.nextLine();
 
-        System.out.println("Modelo: ");
+        System.out.print("Modelo: ");
         modelo = input.nextLine();
 
-        System.out.println("Ano de fabricação: ");
+        System.out.print("Ano de fabricação: ");
         anoFabricacao = Integer.parseInt(input.nextLine());
 
         veiculo = new Veículo(placa, marca, modelo, anoFabricacao);
@@ -165,6 +169,7 @@ public class LerEntrada {
     }
 
     static Condutor lerCondutor() {
+        System.out.println("--Lendo condutor--");
         Scanner input = new Scanner(System.in);
         Condutor condutor;
         String cpf, nome, telefone, endereco, email;
@@ -188,13 +193,13 @@ public class LerEntrada {
             Inválido = true;
         }while(Validacao.validarNome(nome) == false);
 
-        System.out.println("Telefone: ");
+        System.out.print("Telefone: ");
         telefone = input.nextLine();
 
-        System.out.println("Endereço: ");
+        System.out.print("Endereço: ");
         endereco = input.nextLine();
 
-        System.out.println("Email: ");
+        System.out.print("Email: ");
         email = input.nextLine();
 
         System.out.print("Data de nascimento: [dd/MM/yyyy]");
@@ -223,7 +228,7 @@ public class LerEntrada {
         Frota frota;
         String code;
 
-        System.out.println("Lendo frota: \nCode: ");
+        System.out.print("--Lendo frota--\nCode: ");
         code = input.nextLine();
         
         frota = new Frota(code);

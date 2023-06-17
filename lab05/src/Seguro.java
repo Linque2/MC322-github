@@ -107,6 +107,12 @@ public abstract class Seguro {
         return valor;
     }
 
+
+    public boolean gerarSinistro(Sinistro sinistro) {
+        getListaSinistros().add(sinistro);
+        return true;
+    }
+
     public boolean gerarSinistro() {
         Scanner input = new  Scanner(System.in);
         int Indice;
